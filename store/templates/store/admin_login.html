@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMart | Admin Login</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #183b50;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 5px 24px #183b5015;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #07858f;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 7px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #087f8c;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #066873;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #087f8c;
+            text-decoration: none;
+        }
+
+        .message {
+            margin: 10px 0;
+            color: #b42318;
+        }
+    </style>
+</head>
+<body>
+
+    {% include "store/partials/messages.html" %}
+
+
+    <div class="login-card">
+        <h1>💊 MediMart</h1>
+        <h2>Admin Login</h2>
+        <p>Sign in to manage your MediMart website.</p>
+
+        {% for message in messages %}
+            <p class="message">{{ message }}</p>
+        {% endfor %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <label for="username">Admin Username</label>
+            <input
+                type="text"
+                id="username"
+                name="username"
+                autocomplete="username"
+                required
+            >
+
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                autocomplete="current-password"
+                required
+            >
+
+            <button type="submit">Login as Admin</button>
+        </form>
+
+        <a class="back-link" href="{% url 'home' %}">
+            ← Back to MediMart Home
+        </a>
+    </div>
+</body>
+</html>

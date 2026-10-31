@@ -1,0 +1,356 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MediMart | Vendors List</title>
+
+    <style>
+        :root {
+            --teal: #087f8c;
+            --teal-dark: #066570;
+            --navy: #173b50;
+            --muted: #64788a;
+            --page: #f5f8fc;
+            --white: #ffffff;
+            --border: #e3ebf2;
+            --green-bg: #e5f7ed;
+            --green: #18794e;
+            --orange-bg: #fff3df;
+            --orange: #a65c00;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--page);
+            color: var(--navy);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 18px 5%;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 5px 22px rgba(23, 59, 80, .06);
+        }
+
+        .brand {
+            color: var(--teal);
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .nav-links a {
+            color: var(--teal);
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links a:hover {
+            color: var(--teal-dark);
+        }
+
+        .container {
+            width: min(1250px, 94%);
+            margin: 35px auto;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: clamp(26px, 4vw, 34px);
+        }
+
+        .subtitle {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .section-label {
+            display: inline-block;
+            padding: 9px 13px;
+            border-radius: 20px;
+            background: #e0f4f4;
+            color: var(--teal-dark);
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .table-card {
+            overflow: hidden;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            box-shadow: 0 7px 24px rgba(23, 59, 80, .05);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 20px 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-header h2 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .table-header p {
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 950px;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        thead {
+            background: #eef7f8;
+        }
+
+        th {
+            padding: 16px;
+            color: var(--navy);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 17px 16px;
+            border-top: 1px solid #edf1f5;
+            color: #435b6c;
+            font-size: 14px;
+            line-height: 1.5;
+            vertical-align: middle;
+            overflow-wrap: anywhere;
+        }
+
+        tbody tr {
+            transition: background .2s ease;
+        }
+
+        tbody tr:hover {
+            background: #f8fbfd;
+        }
+
+        .store-name {
+            color: var(--navy);
+            font-weight: bold;
+        }
+
+        .username {
+            color: var(--teal);
+            font-weight: bold;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .approved {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+
+        .pending {
+            background: var(--orange-bg);
+            color: var(--orange);
+        }
+
+        .empty-state {
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            margin-bottom: 12px;
+            font-size: 42px;
+        }
+
+        .empty-state h3 {
+            margin: 0 0 8px;
+            color: var(--navy);
+        }
+
+        .empty-state p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .footer-note {
+            margin-top: 16px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 16px 4%;
+            }
+
+            .container {
+                margin: 24px auto;
+            }
+
+            .table-header {
+                padding: 17px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <a class="brand" href="{% url 'home' %}">
+            💊 MediMart Admin
+        </a>
+
+        <nav class="nav-links">
+            <a href="{% url 'home' %}">← Home</a>
+            <a href="{% url 'admin_medicine_approval' %}">
+                Medicine Approval
+            </a>
+            <a href="{% url 'admin_vendor_approval' %}">
+                Vendor Approval
+            </a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="page-heading">
+            <div>
+                <h1>All Vendors</h1>
+                <p class="subtitle">
+                    View registered medical stores and check their approval status.
+                </p>
+            </div>
+
+            <span class="section-label">🏪 Vendor Management</span>
+        </section>
+
+        <section class="table-card">
+            <div class="table-header">
+                <div>
+                    <h2>Registered Vendors</h2>
+                    <p>Vendor contact details and account status</p>
+                </div>
+            </div>
+
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Store Name</th>
+                            <th>Login Username</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Approval Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for vendor in vendors %}
+                        <tr>
+                            <td class="store-name">
+                                🏪 {{ vendor.store_name }}
+                            </td>
+
+                            <td class="username">
+                                {{ vendor.login_username|default:vendor.user.username }}
+                            </td>
+
+                            <td>
+                                {{ vendor.user.email|default:"Not provided" }}
+                            </td>
+
+                            <td>
+                                {{ vendor.phone|default:"Not provided" }}
+                            </td>
+
+                            <td>
+                                {{ vendor.address|default:"Not provided"|linebreaksbr }}
+                            </td>
+
+                            <td>
+                                {% if vendor.is_approved %}
+                                    <span class="status approved">
+                                        ✓ Approved
+                                    </span>
+                                {% else %}
+                                    <span class="status pending">
+                                        ⏳ Pending Approval
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6">
+                                <div class="empty-state">
+                                    <div class="empty-icon">🏪</div>
+                                    <h3>No Vendors Registered</h3>
+                                    <p>
+                                        Registered vendors will appear here.
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <p class="footer-note">
+            MediMart Admin Panel · Vendor information and approval monitoring
+        </p>
+    </main>
+</body>
+</html>

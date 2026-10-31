@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMart | Order Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #243047;
+            margin: 0;
+            padding: 30px 16px;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 28px;
+            border-radius: 14px;
+            box-shadow: 0 3px 12px #00000010;
+        }
+        .success { color: #16804a; }
+        .item {
+            padding: 14px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .total { font-size: 22px; font-weight: bold; }
+        a {
+            display: inline-block;
+            background: #087f8c;
+            color: white;
+            padding: 11px 16px;
+            border-radius: 7px;
+            text-decoration: none;
+        }
+       
+/* MediMart teal back button */
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background-color: #0f766e;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease,
+                transform 0.2s ease;
+}
+
+.back-button:hover {
+    background-color: #115e59;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.back-button:focus-visible {
+    outline: 3px solid #99f6e4;
+    outline-offset: 3px;
+}
+ 
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="page-back">
+    <a href="{% url 'order_history' %}" class="back-button">
+        &larr; Back to My Orders
+    </a>
+    <h1 class="success">✓ Order Placed Successfully!</h1>
+    <p>Thank you for shopping with MediMart.</p>
+
+    <h2>Order #{{ order.id }}</h2>
+    <p><strong>Status:</strong> {{ order.get_status_display }}</p>
+    <p><strong>Payment:</strong>
+        {{ order.get_payment_method_display }}
+    </p>
+    <p><strong>Delivery to:</strong> {{ order.full_name }}</p>
+    <p><strong>Address:</strong> {{ order.delivery_address }}</p>
+    <p><strong>Phone:</strong> {{ order.phone }}</p>
+
+    <h2>Order Items</h2>
+    {% for item in order.items.all %}
+        <div class="item">
+            <strong>{{ item.medicine.name }}</strong>
+            <p>Quantity: {{ item.quantity }}</p>
+            <p>Price: ₹{{ item.unit_price }}</p>
+            <p>Subtotal: ₹{{ item.subtotal }}</p>
+        </div>
+    {% empty %}
+        <p>No items found for this order.</p>
+    {% endfor %}
+
+    <p class="total">
+        Total: ₹{{ order.total_amount }}
+    </p>
+
+    <a href="{% url 'medicine_list' %}">
+        Continue Shopping
+    </a>
+    
+
+</div>
+
+</div>
+</body>
+</html>

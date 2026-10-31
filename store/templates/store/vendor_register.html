@@ -1,0 +1,590 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMart | Vendor Registration</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3158a5;
+            --primary-dark: #203f82;
+            --teal: #087f8c;
+            --text: #20344f;
+            --muted: #718096;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 30px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+            background: linear-gradient(
+                135deg,
+                #e9f5ff,
+                #eff2ff,
+                #e4f8f4
+            );
+            background-size: 300% 300%;
+            animation: backgroundFlow 12s ease infinite;
+            overflow-x: hidden;
+        }
+
+        .background-circle {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.45;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .circle-one {
+            width: 230px;
+            height: 230px;
+            top: -65px;
+            left: -65px;
+            background: #b8d7ff;
+        }
+
+        .circle-two {
+            width: 190px;
+            height: 190px;
+            right: -50px;
+            bottom: -45px;
+            background: #a9e8df;
+            animation-delay: -3s;
+        }
+
+        .circle-three {
+            width: 65px;
+            height: 65px;
+            top: 13%;
+            right: 13%;
+            background: #d4dfff;
+            animation-delay: -5s;
+        }
+
+        .register-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1050px;
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            overflow: hidden;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 24px 70px rgba(35, 66, 112, 0.16);
+            animation: slideUp 0.8s ease both;
+        }
+
+        .welcome-panel {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 45px 35px;
+            color: white;
+            background: linear-gradient(145deg, #3158a5, #087f8c);
+        }
+
+        .welcome-panel::before,
+        .welcome-panel::after {
+            content: "";
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .welcome-panel::before {
+            width: 300px;
+            height: 300px;
+            top: -120px;
+            right: -160px;
+        }
+
+        .welcome-panel::after {
+            width: 240px;
+            height: 240px;
+            left: -140px;
+            bottom: -100px;
+        }
+
+        .brand {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 38px;
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+        }
+
+        .brand span {
+            color: #aaf4e6;
+        }
+
+        .welcome-panel h2 {
+            position: relative;
+            z-index: 1;
+            margin: 0 0 16px;
+            font-size: clamp(28px, 3vw, 38px);
+            line-height: 1.2;
+        }
+
+        .welcome-panel > p {
+            position: relative;
+            z-index: 1;
+            margin: 0;
+            color: #e1ecff;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .benefits {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        .benefit {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #f5f9ff;
+            font-size: 14px;
+        }
+
+        .benefit-icon {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.16);
+            font-size: 17px;
+        }
+
+        .form-panel {
+            min-width: 0;
+            padding: 42px 45px;
+        }
+
+        .form-panel h1 {
+            margin: 0 0 8px;
+            font-size: 29px;
+            letter-spacing: -0.7px;
+        }
+
+        .subtitle {
+            margin: 0 0 25px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Style Django form fields */
+        form p {
+            margin: 0 0 15px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 7px;
+            color: #304663;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        form input,
+        form select,
+        form textarea {
+            display: block;
+            width: 100%;
+            min-width: 0;
+            padding: 12px 13px;
+            border: 1px solid #dce5f0;
+            border-radius: 10px;
+            outline: none;
+            background: #fbfdff;
+            color: var(--text);
+            font: inherit;
+            font-size: 14px;
+            transition:
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background 0.25s ease;
+        }
+
+        form input:focus,
+        form select:focus,
+        form textarea:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(49, 88, 165, 0.12);
+        }
+
+        form input:hover,
+        form select:hover,
+        form textarea:hover {
+            border-color: #a8bddf;
+        }
+
+        form input[type="checkbox"],
+        form input[type="radio"] {
+            display: inline-block;
+            width: auto;
+            margin-right: 7px;
+            accent-color: var(--primary);
+        }
+
+        .helptext {
+            display: block;
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .errorlist {
+            margin: 7px 0 0;
+            padding: 10px 12px;
+            border: 1px solid #f3c5c2;
+            border-radius: 8px;
+            background: #fff3f2;
+            color: #b42318;
+            font-size: 12px;
+            line-height: 1.6;
+            list-style-position: inside;
+        }
+
+        .messages {
+            margin: 0 0 18px;
+            padding: 12px 14px;
+            border: 1px solid #f0c8c5;
+            border-radius: 10px;
+            background: #fff4f3;
+            color: #a52820;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .messages p {
+            margin: 0 0 5px;
+        }
+
+        .messages p:last-child {
+            margin-bottom: 0;
+        }
+
+        .register-button {
+            width: 100%;
+            margin-top: 7px;
+            padding: 14px 18px;
+            border: 0;
+            border-radius: 10px;
+            background: linear-gradient(110deg, #3158a5, #087f8c);
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(49, 88, 165, 0.22);
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease,
+                filter 0.25s ease;
+        }
+
+        .register-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(49, 88, 165, 0.3);
+            filter: brightness(1.05);
+        }
+
+        .register-button:active {
+            transform: translateY(0);
+        }
+
+        .links {
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid #edf1f6;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        .links p {
+            margin: 7px 0;
+        }
+
+        a {
+            color: var(--primary);
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--teal);
+            text-decoration: underline;
+        }
+
+        .home-link {
+            display: inline-block;
+            margin-top: 7px;
+        }
+
+        @keyframes backgroundFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-22px) rotate(8deg);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 780px) {
+            body {
+                padding: 22px 14px;
+            }
+
+            .register-wrapper {
+                max-width: 540px;
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-panel {
+                padding: 28px 27px;
+            }
+
+            .brand {
+                margin-bottom: 20px;
+            }
+
+            .welcome-panel h2 {
+                font-size: 28px;
+            }
+
+            .benefits {
+                gap: 11px;
+                margin-top: 20px;
+            }
+
+            .form-panel {
+                padding: 32px 27px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-circle circle-one"></div>
+    <div class="background-circle circle-two"></div>
+    <div class="background-circle circle-three"></div>
+
+    <main class="register-wrapper">
+
+        <section class="welcome-panel">
+            <div class="brand">Medi<span>Mart</span></div>
+
+            <h2>Grow your pharmacy with MediMart.</h2>
+
+            <p>
+                Bring your pharmacy or medical store online and make it
+                easier for customers to find the medicines they need.
+            </p>
+
+            <div class="benefits">
+                <div class="benefit">
+                    <span class="benefit-icon">🏪</span>
+                    <span>Register your pharmacy or medical store</span>
+                </div>
+
+                <div class="benefit">
+                    <span class="benefit-icon">📦</span>
+                    <span>Manage your medicine listings</span>
+                </div>
+
+                <div class="benefit">
+                    <span class="benefit-icon">🤝</span>
+                    <span>Connect with customers online</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="form-panel">
+            <h1>Vendor Registration</h1>
+
+            <p class="subtitle">
+                Enter your account and store details to get started.
+            </p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="messages" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                
+<div>
+    <label for="username">Vendor Username</label>
+    <input
+        type="text"
+        id="username"
+        name="username"
+        value="{{ request.POST.username }}"
+        autocomplete="username"
+        required
+    >
+</div>
+
+<div>
+    <label for="email">Email Address</label>
+    <input
+        type="email"
+        id="email"
+        name="email"
+        value="{{ request.POST.email }}"
+        autocomplete="email"
+        required
+    >
+</div>
+
+<div>
+    <label for="password1">Password</label>
+    <input
+        type="password"
+        id="password1"
+        name="password1"
+        autocomplete="new-password"
+        required
+    >
+</div>
+
+<div>
+    <label for="password2">Confirm Password</label>
+    <input
+        type="password"
+        id="password2"
+        name="password2"
+        autocomplete="new-password"
+        required
+    >
+</div>
+
+                <label for="store_name">Pharmacy / Store Name</label>
+                <input
+                    type="text"
+                    id="store_name"
+                    name="store_name"
+                    value="{{ request.POST.store_name }}"
+                    autocomplete="organization"
+                    required
+                >
+
+                <label for="phone">Phone Number</label>
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value="{{ request.POST.phone }}"
+                    autocomplete="tel"
+                    required
+                >
+
+                <label for="address">Store Address</label>
+                <input
+                    type="text"
+                    id="address"
+                    name="address"
+                    value="{{ request.POST.address }}"
+                    autocomplete="street-address"
+                    required
+                >
+
+                <button class="register-button" type="submit">
+                    Register as Vendor &rarr;
+                </button>
+            </form>
+            
+<div style="text-align: center; margin-top: 20px;">
+    <a href="{% url 'home' %}"
+       style="display: inline-block;
+              padding: 12px 20px;
+              background-color: #087f8c;
+              color: white;
+              border-radius: 10px;
+              font-weight: bold;
+              text-decoration: none;">
+        ← Back to Home
+    </a>
+</div>
+
+
+            <div class="links">
+                <p>
+                    Already registered as a vendor?
+                    <a href="{% url 'vendor_login' %}">Vendor Login</a>
+                </p>
+
+                <p>
+                    Are you a customer?
+                    <a href="{% url 'register' %}">
+                        Customer Registration
+                    </a>
+                </p>
+
+                
+            </div>
+        </section>
+
+    </main>
+</body>
+</html>

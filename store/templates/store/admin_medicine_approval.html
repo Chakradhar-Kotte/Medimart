@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MediMart | Medicine Approval</title>
+
+    <style>
+        :root {
+            --teal: #087f8c;
+            --teal-dark: #066570;
+            --navy: #173b50;
+            --muted: #64788a;
+            --page: #f5f8fc;
+            --white: #ffffff;
+            --border: #e3ebf2;
+            --green-bg: #e5f7ed;
+            --green: #18794e;
+            --orange-bg: #fff3df;
+            --orange: #a65c00;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--page);
+            color: var(--navy);
+        }
+
+        .navbar {
+            background: var(--white);
+            padding: 18px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 5px 22px rgba(23, 59, 80, .06);
+        }
+
+        .brand {
+            color: var(--teal);
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .back-link {
+            color: var(--teal);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            color: var(--teal-dark);
+        }
+
+        .container {
+            width: min(1100px, 92%);
+            margin: 35px auto;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: clamp(25px, 4vw, 34px);
+        }
+
+        .subtitle {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .section-label {
+            display: inline-block;
+            padding: 8px 13px;
+            border-radius: 20px;
+            color: var(--teal-dark);
+            background: #e0f4f4;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .medicine-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 20px;
+        }
+
+        .medicine-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 23px;
+            box-shadow: 0 7px 24px rgba(23, 59, 80, .05);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .medicine-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(23, 59, 80, .10);
+        }
+
+        .medicine-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            background: #e0f4f4;
+            font-size: 25px;
+            margin-bottom: 17px;
+        }
+
+        .medicine-card h2 {
+            font-size: 20px;
+            margin: 0 0 15px;
+            overflow-wrap: anywhere;
+        }
+
+        .medicine-info {
+            padding: 11px 0;
+            border-bottom: 1px solid #edf1f5;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .medicine-info:last-of-type {
+            border-bottom: none;
+        }
+
+        .info-label {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .status {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 7px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-active {
+            color: var(--green);
+            background: var(--green-bg);
+        }
+
+        .status-pending {
+            color: var(--orange);
+            background: var(--orange-bg);
+        }
+
+        .approve-button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px 16px;
+            background: var(--teal);
+            color: white;
+            border: none;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background .2s ease;
+        }
+
+        .approve-button:hover {
+            background: var(--teal-dark);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 55px 20px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h2 {
+            margin: 0 0 10px;
+        }
+
+        .empty-state p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        @media (max-width: 500px) {
+            .navbar {
+                padding: 16px 4%;
+            }
+
+            .container {
+                margin: 25px auto;
+            }
+
+            .medicine-card {
+                padding: 19px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <a class="brand" href="{% url 'home' %}">
+            💊 MediMart Admin
+        </a>
+
+        <a class="back-link" href="{% url 'home' %}">
+            ← Back to MediMart Home
+        </a>
+    </header>
+
+    <main class="container">
+        <section class="page-heading">
+            <div>
+                <h1>Medicine Approval</h1>
+                <p class="subtitle">
+                    Review medicine submissions and activate medicines
+                    when they are ready for listing.
+                </p>
+            </div>
+
+            <span class="section-label">🛡️ Admin Control</span>
+        </section>
+
+        <section class="medicine-grid">
+            {% for medicine in medicines %}
+                <article class="medicine-card">
+                    <div class="medicine-icon">💊</div>
+
+                    <h2>{{ medicine.name }}</h2>
+
+                    <div class="medicine-info">
+                        <span class="info-label">Category</span>
+                        <span class="info-value">
+                            {{ medicine.category }}
+                        </span>
+                    </div>
+
+                    <div class="medicine-info">
+                        <span class="info-label">Generic Name</span>
+                        <span class="info-value">
+                            {{ medicine.generic_name|default:"Not provided" }}
+                        </span>
+                    </div>
+
+                    {% if medicine.is_active %}
+                        <span class="status status-active">
+                            ✓ Active
+                        </span>
+                    {% else %}
+                        <span class="status status-pending">
+                            ⏳ Awaiting activation
+                        </span>
+
+                        <form method="post"
+                              action="{% url 'activate_medicine' medicine.id %}">
+                            {% csrf_token %}
+                            <button class="approve-button" type="submit">
+                                ✓ Approve / Activate Medicine
+                            </button>
+                        </form>
+                    {% endif %}
+                </article>
+            {% empty %}
+                <div class="empty-state">
+                    <div class="empty-icon">💊</div>
+                    <h2>No medicines found</h2>
+                    <p>
+                        Medicines submitted by vendors will appear here
+                        when available.
+                    </p>
+                </div>
+            {% endfor %}
+        </section>
+    </main>
+</body>
+</html>

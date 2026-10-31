@@ -1,0 +1,80 @@
+
+{% if messages %}
+<div class="medimart-acknowledgements" role="status" aria-live="polite">
+    {% for message in messages %}
+        <div class="medimart-ack medimart-ack-{{ message.tags|default:'info' }}">
+            <span>{{ message }}</span>
+            <button type="button"
+                    class="medimart-ack-close"
+                    aria-label="Close message"
+                    onclick="this.parentElement.remove()">
+                &times;
+            </button>
+        </div>
+    {% endfor %}
+</div>
+
+<style>
+.medimart-acknowledgements {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 99999;
+    width: min(360px, calc(100vw - 36px));
+}
+.medimart-ack {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #243047;
+    border: 1px solid #dbe3ea;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    font-size: 14px;
+}
+.medimart-ack-success {
+    border-left: 4px solid #198754;
+}
+.medimart-ack-error {
+    border-left: 4px solid #dc3545;
+}
+.medimart-ack-warning {
+    border-left: 4px solid #ffc107;
+}
+.medimart-ack-info {
+    border-left: 4px solid #0d6efd;
+}
+.medimart-ack-close {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font-size: 21px;
+    line-height: 1;
+    padding: 0;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const messages = document.querySelectorAll(".medimart-ack");
+
+    messages.forEach(function (message) {
+        setTimeout(function () {
+            message.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+            message.style.opacity = "0";
+            message.style.transform = "translateX(20px)";
+
+            setTimeout(function () {
+                message.remove();
+            }, 400);
+        }, 4000);
+    });
+});
+</script>
+
+{% endif %}

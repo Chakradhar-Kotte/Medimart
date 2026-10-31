@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Login | MediMart</title>
+    <style>
+       
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 8px 0 16px;
+}
+
+.password-wrapper input {
+    width: 100%;
+    min-width: 0;
+    padding-right: 68px;
+    margin: 0;
+}
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 8px 0 16px;
+}
+
+.password-wrapper input {
+    width: 100%;
+    min-width: 0;
+    padding-right: 80px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: block;
+    width: auto;
+    padding: 6px 10px;
+    border: 1px solid #087f8c;
+    border-radius: 6px;
+    background: #eaf7f7;
+    color: #087f8c;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+}
+
+
+.message {
+    padding: 12px;
+    border-radius: 6px;
+    background: #fff4d6;
+    color: #8a5a00;
+    border: 1px solid #f0d98c;
+}
+
+.message.error {
+    background: #fde8e7;
+    color: #b42318;
+    border-color: #f5b8b4;
+}
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef3ff;
+            margin: 0;
+            padding: 0;
+        }
+        .login-box {
+            width: 340px;
+            max-width: calc(100% - 56px);
+            margin: 80px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #0002;
+        }
+        h2 { text-align: center; color: #3158a5; }
+        input {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #3158a5;
+            color: white;
+            border: 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        a { color: #3158a5; }
+        .message { color: #b42318; }
+    </style>
+</head>
+<body>
+    {% include "store/partials/messages.html" %}
+    <div class="login-box">
+        {% if messages %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+        <h2>Vendor Login</h2>
+<form method="post" action="{% url 'vendor_login' %}">
+        {% csrf_token %}
+
+       
+<input
+    type="text"
+    name="username"
+    placeholder="Vendor Username"
+    autocomplete="username"
+    required
+>
+
+<input
+    type="email"
+    name="email"
+    placeholder="Email Address"
+    autocomplete="email"
+    required
+>
+            
+    <div class="password-wrapper">
+    <input
+        type="password"
+        id="vendor-password"
+        name="password"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+        required
+    >
+    <button
+        type="button"
+        class="toggle-password"
+        onclick="togglePassword('vendor-password', this)"
+        aria-label="Show password"
+        aria-pressed="false"
+        aria-controls="vendor-password"
+    >
+        Show
+    </button>
+    </div>
+     <p>
+    <a href="{% url 'password_reset' %}">Forgot Password?</a>
+</p>
+
+            <button type="submit">Login as Vendor</button>
+        </form>
+
+        
+        <p>
+<div style="text-align: center; margin-top: 20px;">
+    <a href="{% url 'home' %}"
+       style="display: inline-block;
+              padding: 12px 20px;
+              background-color: #087f8c;
+              color: white;
+              border-radius: 10px;
+              font-weight: bold;
+              text-decoration: none;">
+        ← Back to Home
+    </a>
+</div>
+</p>
+    </div>
+
+
+<script>
+    function togglePassword(inputId, button) {
+        const passwordInput = document.getElementById(inputId);
+
+        if (!passwordInput) {
+            return;
+        }
+
+        const isHidden = passwordInput.type === "password";
+
+        passwordInput.type = isHidden ? "text" : "password";
+        button.textContent = isHidden ? "Hide" : "Show";
+
+        button.setAttribute(
+            "aria-label",
+            isHidden ? "Hide password" : "Show password"
+        );
+
+        button.setAttribute("aria-pressed", String(isHidden));
+    }
+</script>
+
+</body>
+</html>

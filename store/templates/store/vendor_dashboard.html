@@ -1,0 +1,1315 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard | MediMart</title>
+    <style>
+        
+.page-back {
+    margin-bottom: 20px;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    background-color: #0f766e;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.back-button:hover {
+    background-color: #115e59;
+    color: #ffffff;
+}
+
+        .status-pending { color: #9a6700; }
+.status-accepted { color: #147d70; }
+.status-rejected { color: #b42318; }
+.status-processing { color: #175cd3; }
+.status-completed { color: #067647; }
+.order-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f7f6;
+            margin: 0;
+            padding: 24px;
+        }
+        .container { max-width: 1100px; margin: auto; }
+        .header, .panel {
+            background: white;
+            padding: 22px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px #0001;
+        }
+        h1, h2 { color: #147d70; }
+        .button {
+            display: inline-block;
+            padding: 9px 13px;
+            border-radius: 6px;
+            background: #147d70;
+            color: white;
+            text-decoration: none;
+            border: 0;
+            cursor: pointer;
+        }
+        .delete { background: #b42318; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th { background: #e4f3ef; }
+        .status { font-weight: bold; }
+        .messages { padding: 10px 0; }
+        form { display: inline; }
+        @media (max-width: 700px) {
+            .table-wrap { overflow-x: auto; }
+            table { min-width: 750px; }
+        }
+        
+/* Professional Customer Order Requests Design */
+
+.order-panel {
+    background: #ffffff;
+    padding: 28px;
+    margin-bottom: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e6efed;
+}
+
+.order-panel h2 {
+    color: #087f70;
+    font-size: 25px;
+    margin: 0 0 22px;
+}
+
+.order-summary {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(110px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.order-stat {
+    background: #f0f8f6;
+    border: 1px solid #e1efeb;
+    padding: 16px 12px;
+    border-radius: 11px;
+    text-align: center;
+}
+
+.order-stat span {
+    display: block;
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 9px;
+}
+
+.order-stat strong {
+    font-size: 25px;
+    color: #087f70;
+}
+
+.order-table-wrap {
+    overflow-x: auto;
+    border-radius: 10px;
+}
+
+.order-table {
+    width: 100%;
+    min-width: 1050px;
+    border-collapse: collapse;
+    background: white;
+}
+
+.order-table th {
+    background: #e8f5f2;
+    color: #34534f;
+    padding: 16px 13px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.order-table td {
+    padding: 16px 13px;
+    border-bottom: 1px solid #edf1f2;
+    vertical-align: middle;
+    line-height: 1.6;
+}
+
+.order-table tbody tr:hover {
+    background: #f7fbfa;
+}
+
+.order-number {
+    color: #087f70;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.customer-details {
+    min-width: 190px;
+    max-width: 240px;
+    overflow-wrap: anywhere;
+    color: #475569;
+    font-size: 13px;
+}
+
+.customer-details strong {
+    color: #263746;
+    font-size: 14px;
+}
+
+.order-medicine {
+    font-weight: 600;
+    color: #263746;
+}
+
+.order-status {
+    display: inline-block;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.order-status.status-pending {
+    background: #fff4d6;
+    color: #956500;
+}
+
+.order-status.status-accepted {
+    background: #e1f6e9;
+    color: #147d70;
+}
+
+.order-status.status-rejected {
+    background: #fde8e7;
+    color: #b42318;
+}
+
+.order-status.status-processing {
+    background: #e8f0ff;
+    color: #175cd3;
+}
+
+.order-status.status-completed {
+    background: #e1f6e9;
+    color: #067647;
+}
+
+.order-actions {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    min-width: 150px;
+}
+
+.order-actions form {
+    display: inline;
+}
+
+.order-action-btn {
+    border: none;
+    padding: 9px 12px;
+    border-radius: 7px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    white-space: nowrap;
+}
+
+.accept-btn {
+    background: #087f70;
+}
+
+.accept-btn:hover {
+    background: #06675c;
+}
+
+.reject-btn {
+    background: #dc4545;
+}
+
+.reject-btn:hover {
+    background: #b92e2e;
+}
+
+.process-btn {
+    background: #1677c8;
+}
+
+.process-btn:hover {
+    background: #105b9c;
+}
+
+.complete-btn {
+    background: #168044;
+}
+
+.complete-btn:hover {
+    background: #106435;
+}
+
+.no-orders {
+    text-align: center;
+    padding: 45px 15px;
+    color: #64748b;
+    background: #f8fbfa;
+    border-radius: 10px;
+}
+
+.no-orders h3 {
+    color: #087f70;
+}
+
+@media (max-width: 800px) {
+    .order-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .order-panel {
+        padding: 17px;
+    }
+}
+        
+/* Beautiful Colourful Order Requests Dashboard */
+
+.order-panel {
+    background: linear-gradient(145deg, #ffffff, #f4fbf9);
+    padding: 30px;
+    margin-bottom: 25px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 80, 70, 0.08);
+    border: 1px solid #dcefe9;
+}
+
+.order-panel h2 {
+    color: #087f70;
+    font-size: 27px;
+    margin: 0 0 25px;
+    font-weight: 750;
+}
+
+.order-summary {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(110px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.order-stat {
+    padding: 20px 13px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 5px 13px rgba(0,0,0,0.08);
+    transition: transform 0.25s;
+}
+
+.order-stat:hover {
+    transform: translateY(-5px);
+}
+
+.order-stat:nth-child(1) {
+    background: linear-gradient(135deg, #f5a623, #e67e22);
+}
+
+.order-stat:nth-child(2) {
+    background: linear-gradient(135deg, #12a878, #087f70);
+}
+
+.order-stat:nth-child(3) {
+    background: linear-gradient(135deg, #ef6666, #c0392b);
+}
+
+.order-stat:nth-child(4) {
+    background: linear-gradient(135deg, #5795ee, #2864c8);
+}
+
+.order-stat:nth-child(5) {
+    background: linear-gradient(135deg, #24ad83, #087653);
+}
+
+.order-stat span {
+    display: block;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.order-stat strong {
+    display: block;
+    color: white;
+    font-size: 32px;
+}
+
+.order-table-wrap {
+    overflow-x: auto;
+    border-radius: 13px;
+    border: 1px solid #e3eeeb;
+}
+
+.order-table {
+    width: 100%;
+    min-width: 1120px;
+    border-collapse: collapse;
+    background: white;
+}
+
+.order-table th {
+    background: linear-gradient(135deg, #dff5ef, #e5efff);
+    color: #28534c;
+    padding: 17px 14px;
+    text-align: left;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.order-table td {
+    padding: 16px 14px;
+    border-bottom: 1px solid #edf1f2;
+    vertical-align: middle;
+}
+
+.order-table tbody tr {
+    transition: background 0.2s;
+}
+
+.order-table tbody tr:hover {
+    background: #f0faf7;
+}
+
+.order-number {
+    color: #087f70;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.customer-details {
+    min-width: 200px;
+    max-width: 250px;
+    overflow-wrap: anywhere;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.customer-details strong {
+    color: #243b53;
+    font-size: 14px;
+}
+
+.medicine-info-order {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 190px;
+}
+
+.order-medicine-image {
+    width: 65px;
+    height: 65px;
+    object-fit: contain;
+    padding: 5px;
+    background: #f0f8f6;
+    border: 1px solid #dceee8;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.order-medicine-name {
+    font-weight: 700;
+    color: #263746;
+    font-size: 14px;
+}
+
+.order-quantity {
+    background: #e9f1ff;
+    color: #2864c8;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.order-subtotal {
+    color: #087f70;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.order-status {
+    display: inline-block;
+    padding: 8px 13px;
+    border-radius: 25px;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.order-status.status-pending {
+    background: #fff0c7;
+    color: #956000;
+}
+
+.order-status.status-accepted {
+    background: #d9f7e8;
+    color: #087f50;
+}
+
+.order-status.status-rejected {
+    background: #ffe0e0;
+    color: #bd2929;
+}
+
+.order-status.status-processing {
+    background: #dceaff;
+    color: #1756b1;
+}
+
+.order-status.status-completed {
+    background: #d7f5e4;
+    color: #087044;
+}
+
+.order-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-width: 155px;
+}
+
+.order-actions form {
+    display: inline;
+}
+
+.order-action-btn {
+    border: none;
+    padding: 10px 13px;
+    border-radius: 8px;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+    white-space: nowrap;
+}
+
+.order-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.13);
+}
+
+.accept-btn {
+    background: linear-gradient(135deg, #16a878, #087653);
+}
+
+.reject-btn {
+    background: linear-gradient(135deg, #ef6666, #c0392b);
+}
+
+.process-btn {
+    background: linear-gradient(135deg, #5795ee, #2864c8);
+}
+
+.complete-btn {
+    background: linear-gradient(135deg, #20a875, #087044);
+}
+
+.no-orders {
+    text-align: center;
+    padding: 55px 15px;
+    color: #64748b;
+    background: linear-gradient(135deg, #f0faf7, #f0f5ff);
+    border-radius: 15px;
+}
+
+.no-orders h3 {
+    color: #087f70;
+    font-size: 22px;
+}
+
+@media (max-width: 850px) {
+    .order-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .order-panel {
+        padding: 18px;
+    }
+}       
+/* Colourful My Medicines and Stock Section */
+
+.medicine-panel {
+    background: linear-gradient(145deg, #ffffff, #f3fbf8);
+    padding: 30px;
+    margin-bottom: 25px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 80, 70, 0.08);
+    border: 1px solid #dcefe9;
+}
+
+.medicine-panel h2 {
+    color: #087f70;
+    font-size: 26px;
+    margin: 0 0 24px;
+}
+
+.medicine-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+.medicine-stat {
+    padding: 22px;
+    border-radius: 15px;
+    color: white;
+    box-shadow: 0 5px 13px rgba(0,0,0,0.08);
+    transition: transform 0.25s;
+}
+
+.medicine-stat:hover {
+    transform: translateY(-5px);
+}
+
+.medicine-stat.total {
+    background: linear-gradient(135deg, #5795ee, #2864c8);
+}
+
+.medicine-stat.available {
+    background: linear-gradient(135deg, #16b58a, #087653);
+}
+
+.medicine-stat span {
+    display: block;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.medicine-stat strong {
+    font-size: 32px;
+    color: white;
+}
+
+.medicine-table-wrap {
+    overflow-x: auto;
+    border-radius: 13px;
+    border: 1px solid #e3eeeb;
+}
+
+.medicine-table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+    background: white;
+}
+
+.medicine-table th {
+    background: linear-gradient(135deg, #dff5ef, #e5efff);
+    color: #28534c;
+    padding: 17px 14px;
+    text-align: left;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.medicine-table td {
+    padding: 16px 14px;
+    border-bottom: 1px solid #edf1f2;
+    vertical-align: middle;
+}
+
+.medicine-table tbody tr {
+    transition: background 0.2s;
+}
+
+.medicine-table tbody tr:hover {
+    background: #f0faf7;
+}
+
+.medicine-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 190px;
+}
+
+.medicine-stock-image {
+    width: 65px;
+    height: 65px;
+    object-fit: contain;
+    padding: 5px;
+    background: #f0f8f6;
+    border: 1px solid #dceee8;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.medicine-stock-name {
+    font-weight: 700;
+    color: #263746;
+    font-size: 14px;
+}
+
+.medicine-category {
+    display: inline-block;
+    background: #e8f0ff;
+    color: #2864c8;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.medicine-price {
+    color: #087f70;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.stock-count {
+    display: inline-block;
+    min-width: 42px;
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 9px;
+    background: #fff0d6;
+    color: #a36100;
+    font-weight: 800;
+}
+
+.stock-count.out-of-stock {
+    background: #ffe1e1;
+    color: #bd2929;
+}
+
+.medicine-status {
+    display: inline-block;
+    padding: 8px 13px;
+    border-radius: 25px;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.medicine-status.is-available {
+    background: #d9f7e8;
+    color: #087f50;
+}
+
+.medicine-status.is-unavailable {
+    background: #ffe0e0;
+    color: #bd2929;
+}
+
+.medicine-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.medicine-actions form {
+    display: inline;
+}
+
+.medicine-action-btn {
+    border: none;
+    padding: 10px 13px;
+    border-radius: 8px;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+    white-space: nowrap;
+}
+
+.medicine-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.13);
+}
+
+.medicine-update-btn {
+    background: linear-gradient(135deg, #5795ee, #2864c8);
+}
+
+.medicine-delete-btn {
+    background: linear-gradient(135deg, #ef6666, #c0392b);
+}
+
+.medicine-empty {
+    text-align: center;
+    padding: 50px 15px;
+    color: #64748b;
+    background: linear-gradient(135deg, #f0faf7, #f0f5ff);
+    border-radius: 15px;
+}
+
+.medicine-empty h3 {
+    color: #087f70;
+    font-size: 22px;
+}
+
+.medicine-add-btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 12px 20px;
+    border-radius: 9px;
+    color: white;
+    background: linear-gradient(135deg, #16a878, #087653);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.medicine-add-btn:hover {
+    background: #06675c;
+}
+
+@media (max-width: 800px) {
+    .medicine-panel {
+        padding: 18px;
+    }
+
+    .medicine-summary {
+        grid-template-columns: 1fr;
+    }
+}
+        /* Vendor Dashboard Header */
+.dashboard-hero {
+    background: linear-gradient(135deg, #087f70, #16a085);
+    color: white;
+    padding: 40px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 22px rgba(8, 127, 112, 0.18);
+}
+
+.dashboard-hero h1 {
+    color: white;
+    font-size: 38px;
+    margin: 0 0 18px;
+}
+
+.dashboard-hero h2 {
+    color: #e0fff5;
+    font-size: 27px;
+    margin: 0 0 18px;
+}
+
+.dashboard-hero p {
+    color: white;
+    font-size: 18px;
+    margin-bottom: 24px;
+}
+
+.dashboard-add-btn {
+    display: inline-block;
+    background: white;
+    color: #087f70;
+    padding: 13px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 800;
+    transition: 0.25s;
+}
+
+.dashboard-add-btn:hover {
+    background: #e0fff5;
+    transform: translateY(-3px);
+}
+
+/* Stock Summary */
+.stock-summary-panel {
+    background: linear-gradient(145deg, #ffffff, #f0faf7);
+    padding: 30px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    border: 1px solid #dcefe9;
+    box-shadow: 0 8px 22px rgba(0, 80, 70, 0.08);
+}
+
+.stock-summary-panel h2 {
+    color: #087f70;
+    font-size: 27px;
+    margin: 0 0 22px;
+}
+
+.stock-summary-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.stock-summary-card {
+    padding: 25px;
+    border-radius: 16px;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.09);
+    transition: transform 0.25s;
+}
+
+.stock-summary-card:hover {
+    transform: translateY(-5px);
+}
+
+.stock-summary-card.total {
+    background: linear-gradient(135deg, #5795ee, #2864c8);
+}
+
+.stock-summary-card.available {
+    background: linear-gradient(135deg, #16b58a, #087653);
+}
+
+.stock-summary-card span {
+    display: block;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.stock-summary-card strong {
+    display: block;
+    color: white;
+    font-size: 36px;
+}
+
+@media (max-width: 650px) {
+    .dashboard-hero {
+        padding: 25px;
+    }
+
+    .dashboard-hero h1 {
+        font-size: 29px;
+    }
+
+    .stock-summary-panel {
+        padding: 20px;
+    }
+
+    .stock-summary-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+    </style>
+</head>
+<body>
+
+    {% include "store/partials/messages.html" %}
+    
+<div class="page-back">
+    <a href="{% url 'home' %}" class="back-button">
+        &larr; Back to Home
+    </a>
+</div>
+
+<div class="dashboard-hero">
+    <h1>Vendor Dashboard</h1>
+    <h2>{{ vendor.store_name }}</h2>
+    <p>Manage your medicines, prices, and stock quantities.</p>
+
+    <a href="{% url 'vendor_listing_add' %}" class="dashboard-add-btn">
+        + Add Medicine
+    </a>
+</div>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="stock-summary-panel">
+    <h2>📊 Stock Summary</h2>
+
+    <div class="stock-summary-cards">
+        <div class="stock-summary-card total">
+            <span>💊 Total Medicine Listings</span>
+            <strong>{{ listings|length }}</strong>
+        </div>
+
+        <div class="stock-summary-card available">
+            <span>✅ Available Listings</span>
+            <strong>{{ available_count }}</strong>
+        </div>
+    </div>
+</div>
+   
+<div class="medicine-panel" id="my-medicines">
+
+    <h2>💊 My Medicines and Stock</h2>
+
+    <div class="medicine-summary">
+
+        <div class="medicine-stat total">
+            <span>Total Medicine Listings</span>
+            <strong>{{ listings|length }}</strong>
+        </div>
+
+        <div class="medicine-stat available">
+            <span>Available Listings</span>
+            <strong>{{ available_count }}</strong>
+        </div>
+
+    </div>
+
+    {% if listings %}
+
+    <div class="medicine-table-wrap">
+
+        <table class="medicine-table">
+
+            <thead>
+                <tr>
+                    <th>Medicine</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock Quantity</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for listing in listings %}
+
+                <tr>
+
+                    <td>
+                        <div class="medicine-info">
+
+                            {% if listing.medicine.image %}
+                                <img
+                                    src="{{ listing.medicine.image.url }}"
+                                    alt="{{ listing.medicine.name }}"
+                                    class="medicine-stock-image"
+                                >
+                            {% else %}
+                                <div class="medicine-stock-image"
+                                     style="display:flex;align-items:center;justify-content:center;font-size:28px;">
+                                    💊
+                                </div>
+                            {% endif %}
+
+                            <span class="medicine-stock-name">
+                                {{ listing.medicine.name }}
+                            </span>
+
+                        </div>
+                    </td>
+
+                    <td>
+                        <span class="medicine-category">
+                            {{ listing.medicine.category }}
+                        </span>
+                    </td>
+
+                    <td class="medicine-price">
+                        ₹{{ listing.price }}
+                    </td>
+
+                    <td>
+                        <span class="stock-count {% if listing.stock_quantity <= 0 %}out-of-stock{% endif %}">
+                            {{ listing.stock_quantity }}
+                        </span>
+                    </td>
+
+                    <td>
+
+                        {% if listing.is_available and listing.stock_quantity > 0 and listing.medicine.is_active %}
+
+                            <span class="medicine-status is-available">
+                                ● Available
+                            </span>
+
+                        {% else %}
+
+                            <span class="medicine-status is-unavailable">
+                                ● Unavailable
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        <div class="medicine-actions">
+
+                            <a
+                                class="medicine-action-btn medicine-update-btn"
+                                href="{% url 'vendor_listing_edit' listing.id %}">
+                                Update
+                            </a>
+
+                            <form
+                                method="post"
+                                action="{% url 'vendor_listing_delete' listing.id %}"
+                                onsubmit="return confirm('Delete this medicine listing?');">
+
+                                {% csrf_token %}
+
+                                <button
+                                    class="medicine-action-btn medicine-delete-btn"
+                                    type="submit">
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+        <div class="medicine-empty">
+
+            <h3>💊 No Medicines Added Yet</h3>
+
+            <p>You haven't added any medicine listings to your store.</p>
+
+            <a href="{% url 'vendor_listing_add' %}" class="medicine-add-btn">
+                + Add Your First Medicine
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+    
+
+<div class="order-panel">
+
+    <h2>Customer Order Requests</h2>
+
+    <div class="order-summary">
+
+        <div class="order-stat">
+            <span>New Orders</span>
+            <strong>{{ order_counts.pending }}</strong>
+        </div>
+
+        <div class="order-stat">
+            <span>Accepted</span>
+            <strong>{{ order_counts.accepted }}</strong>
+        </div>
+
+        <div class="order-stat">
+            <span>Rejected</span>
+            <strong>{{ order_counts.rejected }}</strong>
+        </div>
+
+        <div class="order-stat">
+            <span>Processing</span>
+            <strong>{{ order_counts.processing }}</strong>
+        </div>
+
+        <div class="order-stat">
+            <span>Completed</span>
+            <strong>{{ order_counts.completed }}</strong>
+        </div>
+
+    </div>
+
+    {% if order_items %}
+
+    <div class="order-table-wrap">
+
+        <table class="order-table">
+
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Date</th>
+                    <th>Customer Details</th>
+                    <th>Medicine</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for item in order_items %}
+
+                <tr>
+
+                    <td class="order-number">
+                        #{{ item.order.id }}
+                    </td>
+
+                    <td>
+                        {{ item.order.created_at|date:"d M Y, H:i" }}
+                    </td>
+
+                    <td class="customer-details">
+                        <strong>{{ item.order.full_name }}</strong><br>
+                        Phone: {{ item.order.phone }}<br>
+                        Address: {{ item.order.delivery_address }}
+                    </td>
+
+                    <td>
+    <div class="medicine-info-order">
+
+        {% if item.medicine.image %}
+            <img
+                src="{{ item.medicine.image.url }}"
+                alt="{{ item.medicine.name }}"
+                class="order-medicine-image"
+            >
+        {% else %}
+            <div class="order-medicine-image"
+                 style="display:flex;align-items:center;justify-content:center;font-size:28px;">
+                💊
+            </div>
+        {% endif %}
+
+        <span class="order-medicine-name">
+            {{ item.medicine.name }}
+        </span>
+
+    </div>
+</td>
+                    <td>
+    <span class="order-quantity">
+        {{ item.quantity }}
+    </span>
+</td>
+
+<td class="order-subtotal">
+    ₹{{ item.subtotal }}
+</td>
+                    <td>
+                        <span class="order-status status-{{ item.status }}">
+                            {{ item.get_status_display }}
+                        </span>
+                    </td>
+
+                    <td>
+
+                        <div class="order-actions">
+
+                            {% if item.status == "pending" %}
+
+                            <form method="post"
+                                  action="{% url 'vendor_update_order_item' item.id %}">
+                                {% csrf_token %}
+                                <button class="order-action-btn accept-btn"
+                                        name="action"
+                                        value="accept"
+                                        type="submit">
+                                    Accept
+                                </button>
+                            </form>
+
+                            <form method="post"
+                                  action="{% url 'vendor_update_order_item' item.id %}">
+                                {% csrf_token %}
+                                <button class="order-action-btn reject-btn"
+                                        name="action"
+                                        value="reject"
+                                        type="submit">
+                                    Reject
+                                </button>
+                            </form>
+
+                            {% elif item.status == "accepted" %}
+
+                            <form method="post"
+                                  action="{% url 'vendor_update_order_item' item.id %}">
+                                {% csrf_token %}
+                                <button class="order-action-btn process-btn"
+                                        name="action"
+                                        value="processing"
+                                        type="submit">
+                                    Start Processing
+                                </button>
+                            </form>
+
+                            {% elif item.status == "processing" %}
+
+                            <form method="post"
+                                  action="{% url 'vendor_update_order_item' item.id %}">
+                                {% csrf_token %}
+                                <button class="order-action-btn complete-btn"
+                                        name="action"
+                                        value="complete"
+                                        type="submit">
+                                    Mark Completed
+                                </button>
+                            </form>
+
+                            {% else %}
+
+                            <span>No actions</span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="no-orders">
+        <h3>No Customer Orders Yet</h3>
+        <p>New customer order requests will appear here.</p>
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+</div>
+</body>
+</html>

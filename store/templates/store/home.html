@@ -1,0 +1,1102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMart | Your Online Pharmacy</title>
+
+    <style>
+        /* ===== MediMart design system ===== */
+        * { box-sizing: border-box; }
+
+        :root {
+            --teal: #087f8c;
+            --teal-dark: #066570;
+            --navy: #173b50;
+            --muted: #64788a;
+            --page: #f5f8fc;
+            --white: #ffffff;
+            --mint: #e5f7f2;
+            --blue: #eaf1ff;
+            --purple: #f1eaff;
+            --border: #e3ebf2;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--page);
+            color: var(--navy);
+        }
+
+        a, button { font-family: inherit; }
+
+        a {
+            transition: color .2s ease, background .2s ease,
+                transform .2s ease, box-shadow .2s ease;
+        }
+
+        /* ===== Navigation ===== */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            flex-wrap: wrap;
+            min-height: 78px;
+            padding: 14px 5%;
+            background: rgba(255,255,255,.97);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 5px 22px rgba(23,59,80,.06);
+            backdrop-filter: blur(12px);
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--teal);
+            font-size: 29px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .logo:hover {
+            color: var(--teal-dark);
+            transform: translateY(-1px);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .nav-links > a,
+        .logout-button {
+            display: inline-block;
+            padding: 11px 13px;
+            border: 0;
+            border-radius: 10px;
+            background: transparent;
+            color: #405469;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-links > a:hover,
+        .logout-button:hover {
+            background: #eaf7f8;
+            color: var(--teal-dark);
+        }
+
+        .logout-form { display: inline; margin: 0; }
+
+        .welcome-user {
+            padding: 9px 11px;
+            border-radius: 9px;
+            background: #eff8f8;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* ===== Dropdowns ===== */
+        .nav-dropdown { position: relative; }
+
+        .nav-dropdown summary {
+            list-style: none;
+            cursor: pointer;
+        }
+
+        .nav-dropdown summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .nav-dropdown .dropdown-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 43px;
+            padding: 11px 15px;
+            border: 1px solid #dce8ec;
+            border-radius: 11px;
+            background: white;
+            color: #29465a;
+            font-size: 14px;
+            font-weight: 700;
+            transition: background .2s ease, color .2s ease;
+        }
+
+        .nav-dropdown .dropdown-toggle:hover,
+        .nav-dropdown[open] .dropdown-toggle {
+            background: #eaf7f8;
+            color: var(--teal);
+        }
+
+        .nav-dropdown .register-toggle {
+            border-color: var(--teal);
+            background: linear-gradient(135deg,#0b8995,#066d79);
+            color: white;
+            box-shadow: 0 5px 14px rgba(8,127,140,.18);
+        }
+
+        .nav-dropdown .register-toggle:hover,
+        .nav-dropdown[open] .register-toggle {
+            background: var(--teal-dark);
+            color: white;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            z-index: 110;
+            width: 250px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 16px 38px rgba(23,59,80,.15);
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 12px;
+            border-radius: 10px;
+            color: var(--navy);
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.5;
+            text-decoration: none;
+        }
+
+        .dropdown-menu a:hover {
+            background: #edf8f8;
+            color: var(--teal);
+        }
+
+        .dropdown-menu a span {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        /* ===== Hero banner ===== */
+        .hero {
+            position: relative;
+            isolation: isolate;
+            width: 90%;
+            max-width: 1450px;
+            margin: 30px auto;
+            padding: clamp(44px,6vw,78px) 5%;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,.9);
+            border-radius: 30px;
+            background:
+                radial-gradient(circle at 90% 10%,rgba(255,255,255,.85),transparent 28%),
+                radial-gradient(circle at 8% 90%,rgba(180,244,228,.4),transparent 32%),
+                linear-gradient(125deg,#dff8f2 0%,#e7efff 60%,#f0e8ff 100%);
+            box-shadow: 0 18px 48px rgba(23,59,80,.07);
+            text-align: center;
+        }
+
+        .hero-label {
+            display: inline-block;
+            padding: 10px 16px;
+            border: 1px solid rgba(8,127,140,.12);
+            border-radius: 30px;
+            background: rgba(255,255,255,.65);
+            color: var(--teal-dark);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .hero h1 {
+            max-width: 900px;
+            margin: 24px auto 18px;
+            color: var(--navy);
+            font-size: clamp(36px,5vw,62px);
+            font-weight: 850;
+            line-height: 1.13;
+            letter-spacing: -1.7px;
+        }
+
+        .hero h1 span { color: var(--teal); }
+
+        .hero p {
+            max-width: 720px;
+            margin: 0 auto 28px;
+            color: #526d80;
+            font-size: 17px;
+            line-height: 1.8;
+        }
+
+        .shop-button {
+            display: inline-block;
+            padding: 16px 27px;
+            border: 0;
+            border-radius: 12px;
+            background: linear-gradient(135deg,#0b8995,#066d79);
+            box-shadow: 0 9px 22px rgba(8,127,140,.22);
+            color: white;
+            font-size: 16px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .shop-button:hover {
+            background: linear-gradient(135deg,#087f8c,#055c67);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 14px 28px rgba(8,127,140,.25);
+        }
+
+        /* ===== Hero benefits ===== */
+        .hero-benefits {
+            display: grid;
+            grid-template-columns: repeat(3,minmax(0,1fr));
+            gap: 22px;
+            width: 100%;
+            max-width: 1050px;
+            margin: 34px auto 0;
+            text-align: left;
+        }
+
+        .hero-benefit {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .hero-benefit-icon {
+            display: flex;
+            flex: 0 0 46px;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border: 1px solid rgba(255,255,255,.9);
+            border-radius: 15px;
+            background: rgba(255,255,255,.75);
+            box-shadow: 0 4px 12px rgba(23,59,80,.06);
+            font-size: 23px;
+        }
+
+        .hero-benefit h3 {
+            margin: 2px 0 6px;
+            color: var(--navy);
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .hero-benefit p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .hero-note {
+            display: block;
+            margin-top: 26px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        /* ===== Feature section ===== */
+        .section-heading {
+            margin: 52px auto 12px;
+            padding: 0 16px;
+            color: var(--navy);
+            font-size: clamp(28px,3.5vw,40px);
+            font-weight: 850;
+            letter-spacing: -1px;
+            text-align: center;
+        }
+
+        .section-description {
+            max-width: 650px;
+            margin: 0 auto 32px;
+            padding: 0 18px;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3,minmax(0,1fr));
+            align-items: stretch;
+            gap: 24px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto 65px;
+        }
+
+        .feature-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 29px 25px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            background: white;
+            box-shadow: 0 8px 24px rgba(23,59,80,.05);
+            transition: transform .25s ease,box-shadow .25s ease;
+        }
+
+        .feature-card:nth-child(3n+1) {
+            background: linear-gradient(145deg,white,#eafaf5);
+        }
+
+        .feature-card:nth-child(3n+2) {
+            background: linear-gradient(145deg,white,#f1edff);
+        }
+
+        .feature-card:nth-child(3n) {
+            background: linear-gradient(145deg,white,#eaf2ff);
+        }
+
+        .feature-card::before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg,var(--teal),#9b83f4);
+            content: "";
+            opacity: 0;
+            transition: opacity .25s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 17px 35px rgba(23,59,80,.11);
+        }
+
+        .feature-card:hover::before { opacity: 1; }
+
+        .feature-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 62px;
+            height: 62px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,.8);
+            border-radius: 19px;
+            background: rgba(255,255,255,.85);
+            box-shadow: 0 5px 14px rgba(23,59,80,.06);
+            font-size: 30px;
+        }
+
+        .feature-card h2 {
+            margin: 0 0 12px;
+            color: var(--navy);
+            font-size: 20px;
+            font-weight: 800;
+            line-height: 1.4;
+        }
+
+        .feature-card p {
+            margin: 0 0 24px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .feature-card a {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: auto;
+            padding: 11px 15px;
+            border: 1px solid #cce8e5;
+            border-radius: 10px;
+            background: #eff9f8;
+            color: var(--teal);
+            font-size: 14px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .feature-card a:hover {
+            border-color: var(--teal);
+            background: var(--teal);
+            color: white;
+            transform: translateX(2px);
+        }
+
+        /* ===== Footer ===== */
+        footer {
+            padding: 30px 20px;
+            background: linear-gradient(120deg,#173b50,#234c70);
+            color: #e0edf5;
+            font-size: 13px;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        footer p { margin: 5px 0; }
+
+        /* ===== Additional button styling ===== */
+        .nav-links > a,
+        .nav-links .logout-button,
+        .nav-dropdown .dropdown-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 42px;
+            padding: 10px 15px;
+            border: 1px solid #dce8ef;
+            border-radius: 11px;
+            background: #fff;
+            color: #24465b;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+
+        .nav-links > a:hover,
+        .nav-links .logout-button:hover,
+        .nav-dropdown .dropdown-toggle:hover {
+            background: #e6f7f4;
+            border-color: #9bd8d0;
+            color: #087f8c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(8,127,140,.08);
+        }
+
+        .nav-dropdown .register-toggle {
+            background: linear-gradient(135deg,#0b8995,#066d79);
+            border-color: #087f8c;
+            color: white;
+        }
+
+        .nav-dropdown .register-toggle:hover {
+            background: #055c67;
+            color: white;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            margin: 4px 0;
+            padding: 12px 14px;
+            border: 1px solid #e5edf2;
+            border-radius: 10px;
+            background: white;
+            color: #24465b;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all .2s ease;
+        }
+
+        .dropdown-menu a:hover {
+            background: #eaf8f6;
+            border-color: #b9e3dc;
+            color: #087f8c;
+            transform: translateX(3px);
+        }
+
+        button,
+        input[type="submit"],
+        input[type="button"],
+        .button,
+        .btn,
+        .back-button,
+        .continue-shopping,
+        .checkout-button {
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+
+        .shop-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 23px;
+            border: 1px solid #087f8c;
+            border-radius: 12px;
+            background: linear-gradient(135deg,#0b8995,#066d79);
+            color: white;
+            font-weight: 800;
+            text-decoration: none;
+            box-shadow: 0 7px 18px rgba(8,127,140,.18);
+        }
+
+        .shop-button:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 23px rgba(8,127,140,.24);
+        }
+
+        .feature-card a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            padding: 11px 15px;
+            border: 1px solid #bfe4df;
+            border-radius: 10px;
+            background: white;
+            color: #087f8c;
+            font-weight: 750;
+            text-decoration: none;
+        }
+
+        .feature-card a:hover {
+            background: #087f8c;
+            border-color: #087f8c;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        summary:focus-visible {
+            outline: 3px solid #79cfc5;
+            outline-offset: 3px;
+        }
+
+        /* ===== NEW BLACK LOADING SCREEN ===== */
+        #medimart-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 100vh;
+            background: #000;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity .8s ease, visibility .8s ease;
+        }
+
+        #medimart-loader.loader-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            color: white;
+            animation: loaderAppear .9s ease both;
+        }
+
+        /* Shield symbol */
+        .loader-shield {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 112px;
+            height: 125px;
+            margin-bottom: 20px;
+            animation: shieldFloat 2s ease-in-out infinite;
+        }
+
+        .loader-shield svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            filter: drop-shadow(0 0 12px rgba(0,220,200,.55));
+        }
+
+        .shield-outline {
+            fill: rgba(8,127,140,.13);
+            stroke: #16d6c5;
+            stroke-width: 3;
+            stroke-linejoin: round;
+            stroke-dasharray: 300;
+            stroke-dashoffset: 300;
+            animation: drawShield 1.4s ease forwards;
+        }
+
+        .shield-cross {
+            fill: #16d6c5;
+            transform-origin: center;
+            animation: crossAppear .8s 1s ease both;
+        }
+
+        .loader-content h1 {
+            margin: 12px 0;
+            color: white;
+            font-size: 46px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .loader-content h1 span { color: #16d6c5; }
+
+        .loader-content p {
+            margin: 0 0 28px;
+            color: #b8c5d1;
+            font-size: 14px;
+            letter-spacing: .5px;
+        }
+
+        .loader-bar {
+            width: 230px;
+            height: 5px;
+            overflow: hidden;
+            border-radius: 20px;
+            background: #292929;
+        }
+
+        .loader-progress {
+            width: 0;
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(90deg,#08a6a6,#54e0c0);
+            animation: loadingProgress 2.5s ease-in-out forwards;
+        }
+
+        .loader-text {
+            margin-top: 14px;
+            color: #888;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+        }
+
+        @keyframes loaderAppear {
+            from { opacity: 0; transform: scale(.85); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes shieldFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes drawShield {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes crossAppear {
+            from { opacity: 0; transform: scale(.3); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes loadingProgress {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @media (max-width: 900px) {
+            .navbar { justify-content: center; }
+            .features { grid-template-columns: repeat(2,minmax(0,1fr)); }
+            .hero-benefits { gap: 16px; }
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                position: relative;
+                padding: 15px 4%;
+                gap: 12px;
+            }
+
+            .logo { font-size: 26px; }
+
+            .nav-links {
+                width: 100%;
+                gap: 5px;
+            }
+
+            .nav-links > a,
+            .logout-button {
+                padding: 9px 10px;
+                font-size: 13px;
+            }
+
+            .nav-dropdown .dropdown-toggle {
+                min-height: 39px;
+                padding: 9px 11px;
+                font-size: 13px;
+            }
+
+            .dropdown-menu { width: min(250px,85vw); }
+
+            .hero {
+                width: 92%;
+                margin: 20px auto;
+                padding: 42px 20px 30px;
+                border-radius: 23px;
+            }
+
+            .hero h1 {
+                font-size: clamp(33px,9vw,44px);
+                letter-spacing: -1px;
+            }
+
+            .hero p { font-size: 15px; }
+
+            .hero-benefits {
+                grid-template-columns: 1fr;
+                gap: 17px;
+                margin-top: 27px;
+            }
+
+            .section-heading { margin-top: 36px; }
+
+            .features {
+                width: 92%;
+                grid-template-columns: 1fr;
+                gap: 17px;
+            }
+
+            .feature-card { padding: 25px 22px; }
+
+            .loader-content h1 { font-size: 38px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+
+            *,
+            *::before,
+            *::after {
+                transition: none !important;
+            }
+
+            .loader-shield,
+            .loader-progress {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== MediMart Loading Screen ===== -->
+    <div id="medimart-loader">
+        <div class="loader-content">
+
+            <div class="loader-shield">
+                <svg viewBox="0 0 100 115" xmlns="http://www.w3.org/2000/svg">
+                    <path class="shield-outline"
+                        d="M50 5 L90 20 V51 C90 77 73 97 50 109 C27 97 10 77 10 51 V20 Z"/>
+
+                    <g class="shield-cross">
+                        <rect x="43" y="30" width="14" height="50" rx="3"/>
+                        <rect x="25" y="48" width="50" height="14" rx="3"/>
+                    </g>
+                </svg>
+            </div>
+
+            <h1>Medi<span>Mart</span></h1>
+
+            <p>Your Health Journey, Made Simpler.</p>
+
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+
+            <div class="loader-text">
+                PREPARING YOUR EXPERIENCE...
+            </div>
+
+        </div>
+    </div>
+
+    {% include "store/partials/messages.html" %}
+
+    <!-- ===== Navigation ===== -->
+    <nav class="navbar">
+        <a class="logo" href="{% url 'home' %}">💊 MediMart</a>
+
+        <div class="nav-links">
+            <a href="{% url 'home' %}">Home</a>
+
+            {% if user.is_authenticated %}
+
+                {% if user.is_superuser %}
+                    <a href="{% url 'medicine_list' %}">Medicines</a>
+                    <a href="{% url 'admin_medicine_approval' %}">Medicine Approval</a>
+                    <a href="{% url 'admin_vendor_approval' %}">Vendor Approval</a>
+                    <a href="{% url 'admin_vendors_list' %}">Vendors List</a>
+
+                    <span class="welcome-user">
+                        Hi, {{ user.username }}
+                    </span>
+
+                {% elif user.vendorprofile %}
+                    <a href="{% url 'vendor_medicines' %}">Manage Medicines</a>
+
+                    <a href="{% url 'vendor_dashboard' %}#order-requests">
+                        Order Requests
+                    </a>
+
+                    <a href="{% url 'vendor_profile' %}">My Vendor Profile</a>
+
+                    <span class="welcome-user">
+                        Hi, {{ user.vendorprofile.login_username }}
+                    </span>
+
+                {% else %}
+                    <a href="{% url 'medicine_list' %}">Medicines</a>
+                    <a href="{% url 'cart_detail' %}">🛒 Cart</a>
+                    <a href="{% url 'order_history' %}">My Orders</a>
+                    <a href="{% url 'customer_profile' %}">My Profile</a>
+
+                    <span class="welcome-user">
+                        Hi, {{ user.customerprofile.display_username }}
+                    </span>
+                {% endif %}
+
+                <form class="logout-form" method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="logout-button" type="submit">
+                        Logout
+                    </button>
+                </form>
+
+            {% else %}
+
+                <details class="nav-dropdown">
+                    <summary class="dropdown-toggle">
+                        Login <span aria-hidden="true">⌄</span>
+                    </summary>
+
+                    <div class="dropdown-menu">
+                        <a href="{% url 'customer_login' %}">
+                            Customer Login
+                            <span>Shop and manage your orders</span>
+                        </a>
+
+                        <a href="{% url 'vendor_login' %}">
+                            Vendor Login
+                            <span>Manage your store</span>
+                        </a>
+
+                        <a href="{% url 'admin_login' %}" class="dropdown-toggle">
+                            Admin Login
+                        </a>
+                    </div>
+                </details>
+
+                <details class="nav-dropdown">
+                    <summary class="dropdown-toggle register-toggle">
+                        Register <span aria-hidden="true">⌄</span>
+                    </summary>
+
+                    <div class="dropdown-menu">
+                        <a href="{% url 'register' %}">
+                            Customer Register
+                            <span>Create a customer account</span>
+                        </a>
+
+                        <a href="{% url 'vendor_register' %}">
+                            Vendor Register
+                            <span>Register your store</span>
+                        </a>
+                    </div>
+                </details>
+
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- ===== Hero section ===== -->
+    <main>
+        <section class="hero">
+            <span class="hero-label">
+                YOUR ONLINE MEDICINE MARKETPLACE
+            </span>
+
+            <h1>
+                Your Health Journey,<br>
+                <span>Made Simpler.</span>
+            </h1>
+
+            <p>
+                Discover medicines from multiple vendors in one convenient
+                place. Browse available products, compare prices, and manage
+                your orders with ease.
+            </p>
+
+            <a class="shop-button" href="{% url 'medicine_list' %}">
+                Browse Medicines &rarr;
+            </a>
+
+            <div class="hero-benefits">
+                <div class="hero-benefit">
+                    <span class="hero-benefit-icon">💊</span>
+                    <div>
+                        <h3>Multiple Vendors</h3>
+                        <p>Explore listings from different stores</p>
+                    </div>
+                </div>
+
+                <div class="hero-benefit">
+                    <span class="hero-benefit-icon">🔎</span>
+                    <div>
+                        <h3>Compare Options</h3>
+                        <p>Review available products and prices</p>
+                    </div>
+                </div>
+
+                <div class="hero-benefit">
+                    <span class="hero-benefit-icon">📦</span>
+                    <div>
+                        <h3>Track Your Orders</h3>
+                        <p>Review your order history</p>
+                    </div>
+                </div>
+            </div>
+
+            <span class="hero-note">
+                Please use medicines responsibly and follow qualified medical advice.
+            </span>
+        </section>
+
+        <!-- ===== Quick links ===== -->
+        <h2 class="section-heading">Everything You Need</h2>
+
+        <p class="section-description">
+            Explore MediMart's main features in just a few clicks.
+        </p>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">💊</div>
+                <h2>Explore Medicines</h2>
+                <p>
+                    Browse available medicines and compare prices offered
+                    by different vendors.
+                </p>
+                <a href="{% url 'medicine_list' %}">
+                    Explore Medicines &rarr;
+                </a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🛒</div>
+                <h2>Your Shopping Cart</h2>
+                <p>
+                    Review your selected products and update quantities
+                    before checkout.
+                </p>
+                <a href="{% url 'cart_detail' %}">
+                    View Cart &rarr;
+                </a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">👤</div>
+                <h2>Your Account</h2>
+
+                {% if user.is_authenticated %}
+                    <p>
+                        You are logged in as {{ user.username }}.
+                        View your orders or continue shopping.
+                    </p>
+                    <a href="{% url 'order_history' %}">
+                        View My Orders &rarr;
+                    </a>
+                {% else %}
+                    <p>
+                        Create an account or log in to access your
+                        customer shopping features.
+                    </p>
+                    <a href="{% url 'register' %}">
+                        Create Account &rarr;
+                    </a>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== Footer ===== -->
+    <footer>
+        <p>&copy; 2026 MediMart | College Project</p>
+        <p>
+            Use medicines responsibly and follow qualified medical advice.
+        </p>
+    </footer>
+
+    <!-- ===== Dropdown and loader scripts ===== -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dropdowns = document.querySelectorAll(".nav-dropdown");
+
+            dropdowns.forEach(function (currentDropdown) {
+                currentDropdown.addEventListener("toggle", function () {
+                    if (currentDropdown.open) {
+                        dropdowns.forEach(function (otherDropdown) {
+                            if (otherDropdown !== currentDropdown) {
+                                otherDropdown.open = false;
+                            }
+                        });
+                    }
+                });
+            });
+
+            document.addEventListener("click", function (event) {
+                dropdowns.forEach(function (dropdown) {
+                    if (!dropdown.contains(event.target)) {
+                        dropdown.open = false;
+                    }
+                });
+            });
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape") {
+                    dropdowns.forEach(function (dropdown) {
+                        dropdown.open = false;
+                    });
+                }
+            });
+        });
+
+        /* Hide the loading screen after the page loads */
+        window.addEventListener("load", function () {
+            const loader = document.getElementById("medimart-loader");
+
+            if (!loader) return;
+
+            setTimeout(function () {
+                loader.classList.add("loader-hidden");
+
+                setTimeout(function () {
+                    loader.style.display = "none";
+                }, 800);
+
+            }, 2600);
+        });
+    </script>
+
+</body>
+</html>

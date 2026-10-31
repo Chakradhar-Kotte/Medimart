@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMart | Shopping Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 24px;
+            background: #f4f7fb;
+            color: #243047;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .cart-item {
+            background: white;
+            padding: 20px;
+            margin: 16px 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px #00000010;
+        }
+
+        input[type="number"] {
+            width: 70px;
+            padding: 8px;
+        }
+
+        button, .link-button {
+            display: inline-block;
+            padding: 9px 14px;
+            border: none;
+            border-radius: 6px;
+            background: #087f8c;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .remove {
+            background: #c0392b;
+        }
+        .back-button {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 11px 16px;
+    border-radius: 8px;
+    background: #24465b;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.back-button:hover {
+    background: #087f8c;
+    color: white;
+}
+
+        .total {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 24px 0;
+        }
+
+        .message {
+            padding: 10px;
+            background: #e4f6e9;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🛒 Your Shopping Cart</h1>
+
+    <p><a href="{% url 'medicine_list' %}">← Continue shopping</a></p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p class="message">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    {% if cart_items %}
+        {% for item in cart_items %}
+            <div class="cart-item">
+                <h2>{{ item.listing.medicine.name }}</h2>
+                <p>Vendor: {{ item.listing.vendor.store_name }}</p>
+                <p>Price per item: ₹{{ item.listing.price }}</p>
+                <p>Subtotal: ₹{{ item.subtotal }}</p>
+
+                <form method="post"
+                      action="{% url 'update_cart' item.listing.id %}">
+                    {% csrf_token %}
+                    <label>
+                        Quantity:
+                        <input
+                            type="number"
+                            name="quantity"
+                            min="0"
+                            max="{{ item.listing.stock_quantity }}"
+                            value="{{ item.quantity }}"
+                            required
+                        >
+                    </label>
+                    <button type="submit">Update</button>
+                </form>
+
+                <form method="post"
+                      action="{% url 'remove_from_cart' item.listing.id %}"
+                      style="margin-top: 10px;">
+                    {% csrf_token %}
+                    <button class="remove" type="submit">Remove</button>
+                </form>
+            </div>
+        {% endfor %}
+
+        <p class="total">Total: ₹{{ total }}</p>
+        <p style="margin-top: 20px;">
+    <a class="link-button" href="{% url 'checkout' %}">
+        Proceed to Checkout →
+    </a>
+</p>
+    {% else %}
+        <div class="cart-item">
+            <p>Your cart is empty.</p>
+            <a class="link-button" href="{% url 'medicine_list' %}">
+                Browse medicines
+            </a>
+        </div>
+    {% endif %}
+    <p style="margin-top: 20px;">
+        <a href="{% url 'home' %}" class="back-button">
+            ← Back to Home
+        </a>
+    </p>
+</div>
+</body>
+</html>

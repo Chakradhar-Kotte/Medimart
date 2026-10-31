@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMart | Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f7f8;
+            margin: 0;
+            padding: 30px;
+        }
+        .card {
+            max-width: 450px;
+            margin: 40px auto;
+            padding: 28px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px #00000012;
+        }
+        input {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin: 8px 0 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #087f8c;
+            color: white;
+            border: 0;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .errorlist { color: #b42318; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Welcome back</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Log In</button>
+    </form>
+
+    <p>Don't have an account?
+        <a href="{% url 'register' %}">Register</a>
+    </p>
+    <p>
+<a href="{% url 'home' %}"
+   style="display: inline-block; padding: 12px 20px;
+          background-color: #087f8c; color: white;
+          border-radius: 10px; font-weight: bold;
+          text-decoration: none;">
+    ← Back to Home
+</a>
+</p>
+</div>
+</body>
+</html>

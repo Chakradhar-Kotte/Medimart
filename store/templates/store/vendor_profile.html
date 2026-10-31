@@ -1,0 +1,554 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMart | Vendor Profile</title>
+
+    <style>
+        :root {
+            --teal: #087f70;
+            --teal-dark: #06675c;
+            --navy: #203747;
+            --muted: #718096;
+            --page: #f3f8f7;
+            --white: #ffffff;
+            --border: #e1ece9;
+            --green-light: #e0f7ed;
+            --blue-light: #e8f0ff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, #e4f8f1, transparent 35%),
+                var(--page);
+            color: var(--navy);
+        }
+
+        /* Navigation */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            padding: 19px 5%;
+            background: rgba(255,255,255,.96);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 5px 22px rgba(23,59,80,.06);
+        }
+
+        .logo {
+            color: var(--teal);
+            font-size: 25px;
+            font-weight: 800;
+            text-decoration: none;
+            letter-spacing: -.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            color: #425767;
+            font-size: 14px;
+            font-weight: 650;
+            text-decoration: none;
+            padding: 10px 13px;
+            border-radius: 9px;
+            transition: .2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--teal);
+            background: #eaf7f3;
+        }
+
+        /* Main Layout */
+        .container {
+            width: min(94%, 850px);
+            margin: 42px auto;
+        }
+
+        /* Profile Header */
+        .profile-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 35px;
+            margin-bottom: 25px;
+            border-radius: 22px;
+            color: white;
+            background: linear-gradient(125deg, #087f70, #13a88b);
+            box-shadow: 0 12px 28px rgba(8,127,112,.18);
+        }
+
+        .profile-hero::after {
+            content: "";
+            position: absolute;
+            width: 230px;
+            height: 230px;
+            right: -65px;
+            top: -105px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.10);
+        }
+
+        .profile-heading {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-icon {
+            width: 76px;
+            height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border-radius: 20px;
+            background: rgba(255,255,255,.19);
+            border: 1px solid rgba(255,255,255,.3);
+            font-size: 38px;
+        }
+
+        .profile-hero h1 {
+            margin: 0 0 9px;
+            color: white;
+            font-size: 30px;
+        }
+
+        .profile-hero p {
+            margin: 0;
+            color: #e2fff6;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            padding: 32px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 8px 28px rgba(23,59,80,.06);
+        }
+
+        .section-heading {
+            margin: 0 0 7px;
+            color: var(--teal);
+            font-size: 23px;
+        }
+
+        .section-subtitle {
+            margin: 0 0 25px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Details */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .detail {
+            min-width: 0;
+            padding: 19px;
+            background: linear-gradient(145deg, #ffffff, #f6fbfa);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            transition: .2s;
+        }
+
+        .detail:hover {
+            border-color: #a9dcd0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 14px rgba(8,127,112,.06);
+        }
+
+        .detail-label {
+            display: block;
+            margin-bottom: 9px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 750;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+        }
+
+        .detail-value {
+            color: #263f50;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .detail.address-card {
+            grid-column: 1 / -1;
+        }
+
+        /* Approval Status */
+        .approval-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 13px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .approval-badge.approved {
+            background: #dcf8e9;
+            color: #087a49;
+        }
+
+        .approval-badge.pending {
+            background: #fff2d7;
+            color: #a36100;
+        }
+
+        /* Form */
+        .form-divider {
+            margin: 25px 0;
+            border: 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 19px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #344b5a;
+            font-size: 14px;
+            font-weight: 750;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid #d5e2e0;
+            border-radius: 10px;
+            background: #fbfdfd;
+            color: var(--navy);
+            font: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: .2s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--teal);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(8,127,112,.10);
+        }
+
+        textarea {
+            min-height: 115px;
+            resize: vertical;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 26px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 21px;
+            border: 0;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #0b9b80, #08705f);
+            color: white;
+            font-size: 14px;
+            font-weight: 750;
+            text-decoration: none;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(8,127,112,.18);
+        }
+
+        .secondary {
+            background: #edf3f7;
+            color: #405767;
+        }
+
+        .secondary:hover {
+            background: #dfeaf0;
+            box-shadow: none;
+        }
+
+        /* Messages */
+        .message {
+            padding: 14px 17px;
+            margin-bottom: 18px;
+            border: 1px solid #bcebd6;
+            border-radius: 10px;
+            background: #e6f8ef;
+            color: #087348;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 650px) {
+            .navbar {
+                padding: 16px 5%;
+            }
+
+            .nav-links {
+                gap: 4px;
+            }
+
+            .nav-links a {
+                padding: 8px;
+                font-size: 13px;
+            }
+
+            .container {
+                margin: 25px auto;
+            }
+
+            .profile-hero {
+                padding: 25px 20px;
+            }
+
+            .profile-heading {
+                align-items: flex-start;
+                gap: 14px;
+            }
+
+            .profile-icon {
+                width: 58px;
+                height: 58px;
+                font-size: 29px;
+                border-radius: 15px;
+            }
+
+            .profile-hero h1 {
+                font-size: 23px;
+            }
+
+            .profile-card {
+                padding: 22px 17px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail.address-card {
+                grid-column: auto;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="navbar">
+    <a class="logo" href="{% url 'home' %}">💊 MediMart</a>
+
+    <nav class="nav-links">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'vendor_dashboard' %}">Dashboard</a>
+        <a href="{% url 'vendor_medicines' %}">My Medicines</a>
+        <a href="{% url 'vendor_profile' %}">My Profile</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+</header>
+
+<main class="container">
+
+    <section class="profile-hero">
+        <div class="profile-heading">
+            <div class="profile-icon">🏪</div>
+            <div>
+                <h1>My Vendor Profile</h1>
+                <p>Manage your store information and account details.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="profile-card">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% if editing %}
+
+            <h2 class="section-heading">✏️ Edit Store Details</h2>
+            <p class="section-subtitle">
+                Update your vendor account and medical store information.
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="login_username">Vendor Username</label>
+                    <input
+                        id="login_username"
+                        name="login_username"
+                        value="{{ vendor.login_username|default:'' }}"
+                        maxlength="150"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="store_name">Store Name</label>
+                    <input
+                        id="store_name"
+                        name="store_name"
+                        value="{{ vendor.store_name }}"
+                        maxlength="150"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value="{{ vendor.phone }}"
+                        maxlength="15"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Store Address</label>
+                    <textarea
+                        id="address"
+                        name="address"
+                        required
+                    >{{ vendor.address }}</textarea>
+                </div>
+
+                <div class="button-group">
+                    <button class="button" type="submit">
+                        ✓ Save Changes
+                    </button>
+
+                    <a class="button secondary"
+                       href="{% url 'vendor_profile' %}">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+
+        {% else %}
+
+            <h2 class="section-heading">🏪 Store Information</h2>
+            <p class="section-subtitle">
+                Your registered vendor and medical store details.
+            </p>
+
+            <div class="details-grid">
+
+                <div class="detail">
+                    <span class="detail-label">Vendor Username</span>
+                    <div class="detail-value">
+                        {{ vendor.login_username|default:"Not added yet" }}
+                    </div>
+                </div>
+
+                <div class="detail">
+                    <span class="detail-label">Store Name</span>
+                    <div class="detail-value">
+                        {{ vendor.store_name }}
+                    </div>
+                </div>
+
+                <div class="detail">
+                    <span class="detail-label">Phone Number</span>
+                    <div class="detail-value">
+                        {{ vendor.phone|default:"Not added yet" }}
+                    </div>
+                </div>
+
+                <div class="detail">
+                    <span class="detail-label">Approval Status</span>
+                    <div class="detail-value">
+                        {% if vendor.is_approved %}
+                            <span class="approval-badge approved">
+                                ✓ Approved
+                            </span>
+                        {% else %}
+                            <span class="approval-badge pending">
+                                ● Pending Approval
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="detail address-card">
+                    <span class="detail-label">Store Address</span>
+                    <div class="detail-value">
+                        {{ vendor.address|default:"Not added yet"|linebreaksbr }}
+                    </div>
+                </div>
+
+            </div>
+
+            <hr class="form-divider">
+
+            <div class="button-group">
+                <a class="button"
+                   href="{% url 'vendor_profile' %}?edit=1">
+                    ✏️ Update Profile
+                </a>
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+</html>

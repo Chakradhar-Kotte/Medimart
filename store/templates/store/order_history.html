@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMart | My Orders</title>
+    <style>
+        
+.page-back {
+    margin-bottom: 20px;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    background-color: #0f766e;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.back-button:hover {
+    background-color: #115e59;
+    color: #ffffff;
+}
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #243047;
+            margin: 0;
+            padding: 24px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+        .order {
+            background: white;
+            padding: 22px;
+            margin: 18px 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px #00000010;
+        }
+        .item {
+            padding: 14px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .status {
+            display: inline-block;
+            background: #e4f6e9;
+            color: #16804a;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .status-pending {
+            background: #fff4d6;
+            color: #8a5a00;
+        }
+        .status-accepted {
+            background: #e4f6e9;
+            color: #16804a;
+        }
+        .status-rejected {
+            background: #fde8e7;
+            color: #b42318;
+        }
+        .status-processing {
+            background: #e7efff;
+            color: #175cd3;
+        }
+        .status-completed {
+            background: #e4f6e9;
+            color: #067647;
+        }
+        .total {
+            font-weight: bold;
+            font-size: 20px;
+        }
+        a {
+            color: #087f8c;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 14px;
+            background: #087f8c;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+        .muted {
+            color: #667085;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📦 My Orders</h1>
+    <p>
+<div class="page-back">
+    <a href="{% url 'home' %}" class="back-button">
+        &larr; Back to Home
+    </a>
+</div>
+</p>
+
+    {% if orders %}
+        {% for order in orders %}
+            <div class="order">
+                <h2>Order #{{ forloop.counter }}</h2>
+                <p>
+                    <strong>Date:</strong>
+                    {{ order.created_at|date:"d M Y, h:i A" }}
+                </p>
+
+                <p>
+                    <strong>Overall Order Status:</strong>
+                    <span class="status">
+                        {{ order.get_status_display }}
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Payment:</strong>
+                    {{ order.get_payment_method_display }}
+                </p>
+
+                <h3>Medicines and Vendor Updates</h3>
+
+                {% for item in order.items.all %}
+                    <div class="item">
+                        <h4>{{ item.medicine.name }}</h4>
+
+                        <p>
+                            <strong>Quantity:</strong>
+                            {{ item.quantity }}
+                        </p>
+
+                        <p>
+                            <strong>Subtotal:</strong>
+                            ₹{{ item.subtotal }}
+                        </p>
+
+                        <p>
+                            <strong>Vendor:</strong>
+                            {{ item.vendor.store_name }}
+                        </p>
+
+                        <p>
+                            <strong>Vendor Status:</strong>
+                            <span class="status status-{{ item.status }}">
+                                {{ item.get_status_display }}
+                            </span>
+                        </p>
+
+                        {% if item.status == "pending" %}
+                            <p class="muted">
+                                Waiting for the vendor to respond to your request.
+                            </p>
+                        {% elif item.status == "accepted" %}
+                            <p class="muted">
+                                The vendor accepted this medicine request.
+                            </p>
+                        {% elif item.status == "rejected" %}
+                            <p class="muted">
+                                The vendor rejected this medicine request.
+                            </p>
+                        {% elif item.status == "processing" %}
+                            <p class="muted">
+                                Your medicine is being prepared.
+                            </p>
+                        {% elif item.status == "completed" %}
+                            <p class="muted">
+                                The vendor marked this item as completed.
+                            </p>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p>No medicine items were found for this order.</p>
+                {% endfor %}
+
+                <p class="total">
+                    Order Total: ₹{{ order.total_amount }}
+                </p>
+
+                <a class="button"
+                   href="{% url 'order_confirmation' order.id %}">
+                    View Order Details
+                </a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="order">
+            <p>You haven't placed any orders yet.</p>
+            <a class="button" href="{% url 'medicine_list' %}">
+                Browse Medicines
+            </a>
+        </div>
+    {% endif %}
+</div>
+</body>
+</html>

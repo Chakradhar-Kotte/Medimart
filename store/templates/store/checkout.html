@@ -1,0 +1,222 @@
+
+<h1 class="checkout-title">💊 MediMart Checkout</h1>
+
+{% if messages %}
+    {% for message in messages %}
+        <p class="checkout-message">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background: #f0fdfa;
+        color: #1f2937;
+    }
+
+    .checkout-container {
+        max-width: 760px;
+        margin: 20px auto;
+        padding: 30px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(15, 118, 110, 0.10);
+    }
+
+    .checkout-title {
+        max-width: 760px;
+        margin: 20px auto;
+        color: #115e59;
+        font-size: 30px;
+    }
+
+    .page-back {
+        margin-bottom: 24px;
+    }
+
+    .back-button {
+        display: inline-block;
+        padding: 11px 18px;
+        background: #0f766e;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: bold;
+        border-radius: 8px;
+        transition: background 0.2s ease;
+    }
+
+    .back-button:hover {
+        background: #115e59;
+        color: #ffffff;
+    }
+
+    .checkout-section {
+        margin-bottom: 25px;
+    }
+
+    .checkout-section h2 {
+        margin-bottom: 16px;
+        font-size: 21px;
+        color: #134e4a;
+    }
+
+    .checkout-container label {
+        display: block;
+        margin: 14px 0 7px;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .checkout-container input:not([type="hidden"]),
+    .checkout-container textarea,
+    .checkout-container select {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #ffffff;
+        font: inherit;
+    }
+
+    .checkout-container input:focus,
+    .checkout-container textarea:focus,
+    .checkout-container select:focus {
+        outline: 2px solid #99f6e4;
+        border-color: #0f766e;
+    }
+
+    .payment-option {
+        padding: 14px;
+        background: #f0fdfa;
+        border: 1px solid #ccfbf1;
+        border-radius: 8px;
+    }
+
+    .order-summary {
+        padding: 20px;
+        margin: 20px 0;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+    }
+
+    .order-item {
+        padding: 10px 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .order-total {
+        padding-top: 14px;
+        border-top: 1px solid #cbd5e1;
+        color: #115e59;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .place-order-button {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 8px;
+        background: #0f766e;
+        color: white;
+        font-size: 17px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .place-order-button:hover {
+        background: #115e59;
+    }
+
+    .checkout-message {
+        max-width: 760px;
+        margin: 10px auto;
+        padding: 12px;
+        background: #ccfbf1;
+        border-radius: 8px;
+    }
+
+    @media (max-width: 600px) {
+        body {
+            padding: 10px;
+        }
+
+        .checkout-container {
+            margin: 12px auto;
+            padding: 20px;
+        }
+
+        .checkout-title {
+            font-size: 25px;
+        }
+    }
+</style>
+
+<div class="checkout-container">
+
+    <div class="page-back">
+        <a href="{% url 'cart_detail' %}" class="back-button">
+            &larr; Back to Cart
+        </a>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <section class="checkout-section">
+            <h2>Delivery Details</h2>
+
+            <label for="full_name">Full Name</label>
+            <input type="text" id="full_name" name="full_name"
+                   maxlength="150" required>
+
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone"
+                   maxlength="15" required>
+
+            <label for="delivery_address">Delivery Address</label>
+            <textarea id="delivery_address" name="delivery_address"
+                      rows="4" required></textarea>
+        </section>
+
+        <section class="checkout-section">
+            <h2>Payment Method</h2>
+            <div class="payment-option">
+                Cash on Delivery (COD)
+            </div>
+        </section>
+
+        <section class="order-summary">
+            <h2>Order Summary</h2>
+
+            {% for item in cart_items %}
+                <div class="order-item">
+                    {{ item.listing.medicine.name }}
+                    &times; {{ item.quantity }}
+                    &mdash; ₹{{ item.subtotal|floatformat:2 }}
+                </div>
+            {% empty %}
+                <p>Your cart is empty.</p>
+            {% endfor %}
+
+            <p class="order-total">
+                Total: ₹{{ total|floatformat:2 }}
+            </p>
+        </section>
+
+        <button type="submit" class="place-order-button">
+            Place Order
+        </button>
+    </form>
+
+</div>

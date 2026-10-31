@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediMart | My Profile</title>
+    <style>
+        :root {
+            --teal: #087f8c;
+            --teal-dark: #066570;
+            --navy: #173b50;
+            --muted: #64788a;
+            --page: #f5f8fc;
+            --white: #ffffff;
+            --border: #e3ebf2;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--page);
+            color: var(--navy);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 18px 5%;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 5px 22px rgba(23,59,80,.06);
+        }
+
+        .logo {
+            color: var(--teal);
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .nav-links a {
+            color: var(--navy);
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(92%, 680px);
+            margin: 40px auto;
+            padding: 30px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(23,59,80,.06);
+        }
+
+        h1 { margin-top: 0; }
+
+        .subtitle {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .detail {
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .detail-value {
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 8px;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccd8e2;
+            border-radius: 8px;
+            font: inherit;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 22px;
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 8px;
+            background: var(--teal);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .button:hover { background: var(--teal-dark); }
+
+        .secondary {
+            background: #eaf1ff;
+            color: var(--navy);
+            margin-left: 8px;
+        }
+
+        .secondary:hover { background: #dbe6fb; }
+
+        .message {
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 8px;
+            background: #e5f7f2;
+        }
+
+        @media (max-width: 500px) {
+            .container { padding: 22px; margin: 24px auto; }
+            .secondary { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    {% include "store/partials/messages.html" %}
+
+
+<header class="navbar">
+    <a class="logo" href="{% url 'home' %}">💊 MediMart</a>
+    <nav class="nav-links">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'medicine_list' %}">Medicines</a>
+        <a href="{% url 'cart_detail' %}">Cart</a>
+        <a href="{% url 'order_history' %}">My Orders</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+</header>
+
+<main class="container">
+    <h1>My Customer Profile</h1>
+    <p class="subtitle">View and manage your personal information.</p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% if editing %}
+        <form method="post">
+            {% csrf_token %}
+
+            <label for="display_username">Display Username</label>
+            <input id="display_username" name="display_username"
+                   value="{{ profile.display_username }}" maxlength="150" required>
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email"
+                   value="{{ request.user.email }}" required>
+
+            <label for="full_name">Full Name</label>
+            <input id="full_name" name="full_name"
+                   value="{{ profile.full_name }}" maxlength="150" required>
+
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone"
+                   value="{{ profile.phone }}" maxlength="15" required>
+
+            <label for="delivery_address">Delivery Address</label>
+            <textarea id="delivery_address" name="delivery_address"
+                      required>{{ profile.delivery_address }}</textarea>
+
+            <button class="button" type="submit">Save Changes</button>
+            <a class="button secondary" href="{% url 'customer_profile' %}">
+                Cancel
+            </a>
+        </form>
+    {% else %}
+        <div class="detail">
+            <span class="detail-label">Display Username</span>
+            <div class="detail-value">{{ profile.display_username|default:"Not added yet" }}</div>
+        </div>
+
+        <div class="detail">
+            <span class="detail-label">Email Address</span>
+            <div class="detail-value">{{ request.user.email|default:"Not added yet" }}</div>
+        </div>
+
+        <div class="detail">
+            <span class="detail-label">Full Name</span>
+            <div class="detail-value">{{ profile.full_name|default:"Not added yet" }}</div>
+        </div>
+
+        <div class="detail">
+            <span class="detail-label">Phone Number</span>
+            <div class="detail-value">{{ profile.phone|default:"Not added yet" }}</div>
+        </div>
+
+        <div class="detail">
+            <span class="detail-label">Delivery Address</span>
+            <div class="detail-value">{{ profile.delivery_address|default:"Not added yet"|linebreaksbr }}</div>
+        </div>
+
+        <a class="button" href="{% url 'customer_profile' %}?edit=1">
+            Update Profile
+        </a>
+    {% endif %}
+</main>
+</body>
+</html>

@@ -1,0 +1,713 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Medicines | MediMart</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #087f8c;
+            --primary-dark: #06636d;
+            --purple: #6654c0;
+            --navy: #203653;
+            --text: #334155;
+            --muted: #718096;
+            --background: #f2f5fb;
+            --border: #e5edf0;
+            --success: #07865b;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+        }
+
+        /* HEADER */
+
+        header {
+            background: linear-gradient(120deg, #142d4e, #1e4d75, #087f8c);
+            color: white;
+            padding: 24px 7%;
+            box-shadow: 0 5px 18px rgba(20, 45, 78, 0.18);
+        }
+
+        .header-content {
+            max-width: 1250px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            color: white;
+            text-decoration: none;
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .brand span {
+            color: #b9fff0;
+        }
+
+        .header-subtitle {
+            margin: 5px 0 0;
+            color: #e0fffa;
+            font-size: 14px;
+        }
+
+        .header-icon {
+            font-size: 42px;
+            background: rgba(255,255,255,0.15);
+            width: 65px;
+            height: 65px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* MAIN CONTAINER */
+
+        main {
+            max-width: 1250px;
+            margin: 35px auto;
+            padding: 0 24px 50px;
+        }
+
+        /* BACK BUTTON */
+
+        .page-back {
+            margin-bottom: 25px;
+        }
+
+        .back-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #6654c0, #8b5cf6);
+    color: white;
+    padding: 11px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 84, 192, 0.25);
+}
+
+.back-btn:hover {
+    background: linear-gradient(135deg, #5140a5, #7042d8);
+    color: white;
+    transform: translateY(-2px);
+}
+
+        /* PAGE INTRO */
+
+        .page-intro {
+            margin-bottom: 25px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            color: #6654c0;
+            background: #eeeaff;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .page-intro h2 {
+            color: var(--navy);
+            font-size: 32px;
+            margin: 0 0 9px;
+            letter-spacing: -0.7px;
+        }
+
+        .page-intro p {
+            color: var(--muted);
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* SEARCH AREA */
+
+        .search-panel {
+            background: linear-gradient(120deg, #ffffff, #f7f5ff);
+            padding: 22px;
+            border: 1px solid #e8e2ff;
+            border-left: 5px solid #8b78dc;
+            border-radius: 17px;
+            box-shadow: 0 5px 20px rgba(68, 52, 130, 0.06);
+            margin-bottom: 30px;
+        }
+
+        .search-label {
+            display: block;
+            color: var(--navy);
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 11px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 12px;
+        }
+
+        .search-input-wrap {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-input-wrap span {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 19px;
+        }
+
+        .search-box input {
+            width: 100%;
+            min-width: 0;
+            padding: 14px 15px 14px 45px;
+            border: 1px solid #dce7eb;
+            border-radius: 11px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s ease;
+            font-family: inherit;
+        }
+
+        .search-box input:focus {
+            border-color: #8b78dc;
+            box-shadow: 0 0 0 3px rgba(102, 84, 192, 0.12);
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+        .search-button {
+            padding: 13px 27px;
+            background: #6654c0;
+            color: white;
+            border: none;
+            border-radius: 11px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .search-button:hover {
+            background: #51409f;
+            transform: translateY(-2px);
+        }
+
+        /* SECTION HEADING */
+
+        .catalog-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin: 32px 0 18px;
+            flex-wrap: wrap;
+        }
+
+        .catalog-heading h3 {
+            color: var(--navy);
+            font-size: 21px;
+            margin: 0;
+        }
+
+        .catalog-tag {
+            color: var(--success);
+            background: #e2f8ee;
+            padding: 7px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* MEDICINE GRID */
+
+        .medicine-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 23px;
+            align-items: stretch;
+        }
+
+        /* MEDICINE CARD */
+
+        .medicine-card {
+            background: white;
+            padding: 18px;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            box-shadow: 0 5px 18px rgba(25, 60, 75, 0.045);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            min-width: 0;
+        }
+
+        .medicine-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 13px 28px rgba(25, 60, 75, 0.11);
+        }
+
+        /* MEDICINE IMAGE */
+
+        .image-container {
+            width: 100%;
+            height: 195px;
+            background: linear-gradient(135deg, #eaf8f7, #f1efff, #fff5ed);
+            border-radius: 13px;
+            margin-bottom: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .medicine-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .medicine-card:hover .medicine-image {
+            transform: scale(1.04);
+        }
+
+        .medicine-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6654c0;
+            font-size: 58px;
+        }
+
+        /* MEDICINE DETAILS */
+
+        .medicine-card h2 {
+            color: #203653;
+            font-size: 20px;
+            line-height: 1.35;
+            margin: 0 0 10px;
+        }
+
+        .category {
+            display: inline-block;
+            color: #7046a5;
+            background: #f0e9ff;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 10px;
+            border-radius: 7px;
+            margin: 0 0 12px;
+        }
+
+        .generic-name {
+            color: #526575;
+            font-size: 13px;
+            margin: 0 0 10px;
+            line-height: 1.5;
+        }
+
+        .description {
+            color: #718096;
+            font-size: 13px;
+            line-height: 1.7;
+            margin: 0 0 17px;
+            min-height: 44px;
+        }
+
+        /* STORE SECTION */
+
+        .store-heading {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #087f8c;
+            font-size: 14px;
+            font-weight: 800;
+            margin: 18px 0 10px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .vendor {
+            background: linear-gradient(135deg, #eef7ff, #f3f0ff);
+            border: 1px solid #d8eaff;
+            padding: 13px;
+            border-radius: 12px;
+            margin-top: 10px;
+            transition: 0.2s ease;
+        }
+
+        .vendor:hover {
+            background: #eaf7ff;
+            border-color: #a9d8ee;
+        }
+
+        .vendor-name {
+            color: #344b5b;
+            font-size: 14px;
+            font-weight: 800;
+            line-height: 1.5;
+            display: block;
+        }
+
+        .vendor-label {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        .price {
+            color: #07865b;
+            font-size: 23px;
+            font-weight: 800;
+            margin: 11px 0 5px;
+        }
+
+        .stock {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #16845d;
+            background: #e4f7ed;
+            padding: 6px 9px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 700;
+            margin: 0 0 12px;
+        }
+
+        /* ADD TO CART */
+
+        .cart-form {
+            margin: 0;
+        }
+
+        .cart-button {
+            width: 100%;
+            padding: 11px 14px;
+            background: linear-gradient(120deg, #f08a36, #ed684c);
+            color: white;
+            border: none;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .cart-button:hover {
+            background: linear-gradient(120deg, #d96d20, #d94e36);
+            box-shadow: 0 5px 12px rgba(237, 104, 76, 0.22);
+            transform: translateY(-2px);
+        }
+
+        .no-store {
+            color: #8a6470;
+            background: #fff3f3;
+            border: 1px solid #f6dddd;
+            padding: 11px;
+            border-radius: 9px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* EMPTY SEARCH RESULT */
+
+        .empty-message {
+            grid-column: 1 / -1;
+            background: white;
+            text-align: center;
+            padding: 55px 25px;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            box-shadow: 0 5px 18px rgba(25, 60, 75, 0.04);
+        }
+
+        .empty-icon {
+            font-size: 55px;
+            margin-bottom: 12px;
+        }
+
+        .empty-message h3 {
+            color: var(--navy);
+            font-size: 21px;
+            margin: 0 0 10px;
+        }
+
+        .empty-message p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        /* FOOTER */
+
+        footer {
+            background: #172b4d;
+            color: #d6e8ec;
+            text-align: center;
+            padding: 22px 15px;
+            font-size: 13px;
+        }
+
+        footer strong {
+            color: #75e3d1;
+        }
+
+        /* RESPONSIVE DESIGN */
+
+        @media (max-width: 650px) {
+            header {
+                padding: 20px 6%;
+            }
+
+            .brand {
+                font-size: 25px;
+            }
+
+            main {
+                margin-top: 25px;
+                padding: 0 15px 35px;
+            }
+
+            .page-intro h2 {
+                font-size: 26px;
+            }
+
+            .search-panel {
+                padding: 16px;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-button {
+                width: 100%;
+            }
+
+            .medicine-grid {
+                grid-template-columns: 1fr;
+                gap: 17px;
+            }
+
+            .image-container {
+                height: 210px;
+            }
+        }
+
+        @media (min-width: 651px) and (max-width: 900px) {
+            .medicine-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-content">
+            <div>
+                <a href="/" class="brand">💊 Medi<span>Mart</span></a>
+                <p class="header-subtitle">
+                    Find medicines from approved stores
+                </p>
+            </div>
+
+            <div class="header-icon">⚕️</div>
+        </div>
+    </header>
+
+    <main>
+
+        <div class="page-back">
+            <a href="{% url 'home' %}" class="back-btn">
+                &larr; Back to Home
+            </a>
+        </div>
+
+        <section class="page-intro">
+            <span class="eyebrow">Your Health, Our Priority</span>
+            <h2>Medicine Catalog</h2>
+            <p>
+                Explore medicines, compare prices from available stores,
+                and conveniently add your medicines to the cart.
+            </p>
+        </section>
+
+        <section class="search-panel">
+            <label class="search-label" for="medicine-search">
+                Search for medicines
+            </label>
+
+            <form method="get" class="search-box">
+                <div class="search-input-wrap">
+                    <span>🔍</span>
+                    <input
+                        id="medicine-search"
+                        type="text"
+                        name="q"
+                        value="{{ query }}"
+                        placeholder="Search medicine or category..."
+                        aria-label="Search medicines"
+                    >
+                </div>
+
+                <button type="submit" class="search-button">
+                    Search Medicines
+                </button>
+            </form>
+        </section>
+
+        <div class="catalog-heading">
+            <h3>💊 Available Medicines</h3>
+            <span class="catalog-tag">Trusted Store Listings</span>
+        </div>
+
+        <div class="medicine-grid">
+
+            {% for medicine in medicines %}
+
+                <article class="medicine-card">
+
+                    <div class="image-container">
+                        {% if medicine.image %}
+                            <img
+                                src="{{ medicine.image.url }}"
+                                alt="{{ medicine.name }}"
+                                class="medicine-image"
+                            >
+                        {% else %}
+                            <div class="medicine-image-placeholder">
+                                💊
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <h2>{{ medicine.name }}</h2>
+
+                    <p class="category">
+                        {{ medicine.category.name }}
+                    </p>
+
+                    {% if medicine.generic_name %}
+                        <p class="generic-name">
+                            <strong>Generic name:</strong>
+                            {{ medicine.generic_name }}
+                        </p>
+                    {% endif %}
+
+                    <p class="description">
+                        {{ medicine.description|truncatewords:25 }}
+                    </p>
+
+                    <h3 class="store-heading">
+                        🏪 Available Stores
+                    </h3>
+
+                    {% for listing in medicine.available_listings %}
+
+                        <div class="vendor">
+
+                            <span class="vendor-name">
+                                {{ listing.vendor.store_name }}
+                            </span>
+
+                            <p class="vendor-label">
+                                Medicine price
+                            </p>
+
+                            <p class="price">
+                                ₹{{ listing.price|floatformat:2 }}
+                            </p>
+
+                            <p class="stock">
+                                ✓ Stock available: {{ listing.stock_quantity }}
+                            </p>
+
+                            <form
+                                method="post"
+                                action="{% url 'add_to_cart' listing.id %}"
+                                class="cart-form"
+                            >
+                                {% csrf_token %}
+
+                                <button type="submit" class="cart-button">
+                                    🛒 Add to Cart
+                                </button>
+                            </form>
+
+                        </div>
+
+                    {% empty %}
+
+                        <div class="no-store">
+                            No available stores for this medicine right now.
+                        </div>
+
+                    {% endfor %}
+
+                </article>
+
+            {% empty %}
+
+                <div class="empty-message">
+                    <div class="empty-icon">🔍</div>
+
+                    <h3>No Medicines Found</h3>
+
+                    <p>
+                        We couldn't find any medicines matching your search.
+                        Try another medicine name or category, or check whether
+                        medicines and approved vendor listings have been added.
+                    </p>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </main>
+
+    <footer>
+        <p>
+            © MediMart | Your Health, Our Priority.
+            <strong>Shop Smart. Stay Healthy.</strong>
+        </p>
+    </footer>
+
+</body>
+</html>
