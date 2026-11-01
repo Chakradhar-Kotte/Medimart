@@ -19,10 +19,33 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.core.mail import send_mail
-
+from math import radians, sin, cos, sqrt, atan2
 
 def home(request):
     return render(request, "store/home.html")
+
+def calculate_distance(lat1, lon1, lat2, lon2):
+    """
+    Calculate distance between two locations in kilometers.
+    """
+    earth_radius = 6371
+
+    lat1 = radians(float(lat1))
+    lon1 = radians(float(lon1))
+    lat2 = radians(float(lat2))
+    lon2 = radians(float(lon2))
+
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+
+    a = (
+        sin(dlat / 2) ** 2
+        + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+    )
+
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    return earth_radius * c
 
 
 def medicine_list(request):
@@ -66,15 +89,58 @@ def medicine_list(request):
             | Q(category__name__icontains=query)
         )
 
+    # Get approved vendors who have saved store coordinates.
+    nearby_stores = (
+        VendorProfile.objects
+        .filter(
+            is_approved=True,
+            latitude__isnull=False,
+            longitude__isnull=False,
+        )
+        .exclude(address="")
+    )
+
+    customer_lat = request.GET.get("latitude")
+    customer_lng = request.GET.get("longitude")
+
+    stores_with_distance = []
+
+    if customer_lat and customer_lng:
+        try:
+            customer_lat = float(customer_lat)
+            customer_lng = float(customer_lng)
+
+            if not (-90 <= customer_lat <= 90 and
+                    -180 <= customer_lng <= 180):
+                raise ValueError("Invalid coordinates")
+
+            for store in nearby_stores:
+                distance = calculate_distance(
+                    customer_lat,
+                    customer_lng,
+                    store.latitude,
+                    store.longitude,
+                )
+
+                stores_with_distance.append({
+                    "store": store,
+                    "distance": round(distance, 2),
+                })
+
+            stores_with_distance.sort(
+                key=lambda item: item["distance"]
+            )
+
+        except (ValueError, TypeError):
+            stores_with_distance = []
+
     context = {
         "medicines": medicines,
         "query": query,
+        "nearby_stores": stores_with_distance,
     }
 
     return render(request, "store/medicine_list.html", context)
-
-
-
 from decimal import Decimal
 
 from django.contrib import messages
@@ -1347,6 +1413,7 @@ def customer_profile(request):
         {"profile": profile, "editing": editing},
     )
 
+
 @login_required
 def vendor_profile(request):
     vendor = VendorProfile.objects.filter(
@@ -1370,6 +1437,9 @@ def vendor_profile(request):
         phone = request.POST.get("phone", "").strip()
         address = request.POST.get("address", "").strip()
 
+        latitude_value = request.POST.get("latitude", "").strip()
+        longitude_value = request.POST.get("longitude", "").strip()
+
         if not all([login_username, store_name, phone, address]):
             messages.error(
                 request,
@@ -1384,10 +1454,41 @@ def vendor_profile(request):
                 },
             )
 
+        # Validate the coordinates if provided
+        try:
+            latitude = float(latitude_value) if latitude_value else None
+            longitude = float(longitude_value) if longitude_value else None
+
+            if latitude is not None and not -90 <= latitude <= 90:
+                raise ValueError
+
+            if longitude is not None and not -180 <= longitude <= 180:
+                raise ValueError
+
+            if (latitude is None) != (longitude is None):
+                raise ValueError
+
+        except ValueError:
+            messages.error(
+                request,
+                "Please select a valid store location on the map."
+            )
+            return render(
+                request,
+                "store/vendor_profile.html",
+                {
+                    "vendor": vendor,
+                    "editing": True,
+                },
+            )
+
         vendor.login_username = login_username
         vendor.store_name = store_name
         vendor.phone = phone
         vendor.address = address
+        vendor.latitude = latitude
+        vendor.longitude = longitude
+
         vendor.save()
 
         messages.success(

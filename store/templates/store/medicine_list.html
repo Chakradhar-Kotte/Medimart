@@ -4,7 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
     <title>Medicines | MediMart</title>
 
     <style>
@@ -533,6 +536,78 @@
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
         }
+
+                /* NEARBY MEDICAL STORES */
+
+        .nearby-section {
+            background: white;
+            padding: 22px;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 18px rgba(25, 60, 75, 0.045);
+        }
+
+        .nearby-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nearby-heading h3 {
+            color: var(--navy);
+            margin: 0 0 7px;
+            font-size: 21px;
+        }
+
+        .nearby-heading p,
+        .nearby-message {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .nearby-store-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 14px;
+        }
+
+        .nearby-store-card {
+            background: linear-gradient(135deg, #eef7ff, #f3f0ff);
+            border: 1px solid #d8eaff;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .nearby-store-card h4 {
+            color: #344b5b;
+            margin: 0 0 9px;
+            font-size: 15px;
+        }
+
+        .nearby-store-card p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .nearby-store-card strong {
+            color: var(--success);
+            font-size: 13px;
+        }
+
+        @media (max-width: 650px) {
+            .nearby-section {
+                padding: 16px;
+            }
+
+            .nearby-heading button {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
@@ -593,6 +668,69 @@
         </section>
 
         <div class="catalog-heading">
+                    <!-- NEARBY MEDICAL STORES -->
+
+        <section class="nearby-section">
+
+            <div class="nearby-heading">
+                <div>
+                    <h3>📍 Nearby Medical Stores</h3>
+                    <p>Find approved medical stores near your location.</p>
+                </div>
+
+                <button
+                    type="button"
+                    id="find-nearby-btn"
+                    class="search-button"
+                >
+                    Find Nearby Stores
+                </button>
+            </div>
+
+            <p id="nearby-message" class="nearby-message">
+                Allow location access to find nearby medical stores.
+            </p>
+
+            <div id="nearby-map"
+                 style="height:350px; width:100%; border-radius:14px; margin:18px 0; border:1px solid #e5edf0;">
+            </div>
+
+            <div class="nearby-store-list">
+
+                {% for item in nearby_stores %}
+
+                    <div
+                        class="nearby-store-card"
+                        data-lat="{{ item.store.latitude }}"
+                        data-lng="{{ item.store.longitude }}"
+                        data-name="{{ item.store.store_name }}"
+                        data-address="{{ item.store.address }}"
+                    >
+
+                        <h4>🏪 {{ item.store.store_name }}</h4>
+
+                        <p>
+                            📍 {{ item.store.address }}
+                        </p>
+
+                        <strong>
+                            {{ item.distance }} km away
+                        </strong>
+
+                    </div>
+
+                {% empty %}
+
+                    <p class="no-store">
+                        No nearby store locations to display yet.
+                        Select your location to search for stores.
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
             <h3>💊 Available Medicines</h3>
             <span class="catalog-tag">Trusted Store Listings</span>
         </div>
@@ -708,6 +846,158 @@
             <strong>Shop Smart. Stay Healthy.</strong>
         </p>
     </footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const button = document.getElementById("find-nearby-btn");
+    const message = document.getElementById("nearby-message");
+
+    if (!button || !message) return;
+
+    button.addEventListener("click", function () {
+
+        if (!navigator.geolocation) {
+            message.textContent =
+                "Your browser does not support location access.";
+            return;
+        }
+
+        button.disabled = true;
+        message.textContent = "Getting your location...";
+
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                const url = new URL(window.location.href);
+
+                url.searchParams.set("latitude", latitude);
+                url.searchParams.set("longitude", longitude);
+
+                message.textContent =
+                    "Location found. Finding nearby medical stores...";
+
+                window.location.href = url.toString();
+            },
+
+            function (error) {
+
+                button.disabled = false;
+
+                if (error.code === error.PERMISSION_DENIED) {
+                    message.textContent =
+                        "Location permission was denied. Please allow location access in your browser.";
+                } else {
+                    message.textContent =
+                        "Unable to get your location. Please try again.";
+                }
+            },
+
+            {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 0
+            }
+        );
+
+    });
+
+    const mapElement = document.getElementById("nearby-map");
+
+    if (typeof L === "undefined" || !mapElement) return;
+
+    const stores = document.querySelectorAll(".nearby-store-card");
+
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const customerLat = parseFloat(urlParams.get("latitude"));
+    const customerLng = parseFloat(urlParams.get("longitude"));
+
+    const hasCustomerLocation =
+        Number.isFinite(customerLat) &&
+        Number.isFinite(customerLng) &&
+        customerLat >= -90 && customerLat <= 90 &&
+        customerLng >= -180 && customerLng <= 180;
+
+    const map = L.map("nearby-map").setView(
+        hasCustomerLocation
+            ? [customerLat, customerLng]
+            : [20.5937, 78.9629],
+        hasCustomerLocation ? 12 : 5
+    );
+
+    L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+        {
+            attribution: "Tiles &copy; Esri"
+        }
+    ).addTo(map);
+
+    if (hasCustomerLocation) {
+
+        L.marker([customerLat, customerLng])
+            .addTo(map)
+            .bindPopup("Your location");
+
+        message.textContent =
+            "Nearby medical stores are sorted by distance.";
+
+    }
+
+    const bounds = [];
+
+    if (hasCustomerLocation) {
+        bounds.push([customerLat, customerLng]);
+    }
+
+    stores.forEach(function (card) {
+
+        const lat = parseFloat(card.dataset.lat);
+        const lng = parseFloat(card.dataset.lng);
+
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+            return;
+        }
+
+        const name = card.dataset.name;
+        const address = card.dataset.address;
+
+        L.marker([lat, lng])
+            .addTo(map)
+            .bindPopup(
+                "<strong>" + escapeHtml(name) +
+                "</strong><br>" + escapeHtml(address)
+            );
+
+        bounds.push([lat, lng]);
+
+    });
+
+    if (bounds.length > 0) {
+        map.fitBounds(bounds, { padding: [35, 35], maxZoom: 14 });
+    }
+
+    setTimeout(function () {
+        map.invalidateSize();
+    }, 300);
+
+    function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, function (char) {
+            return {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            }[char];
+        });
+    }
+
+});
+</script>
 </body>
 </html>

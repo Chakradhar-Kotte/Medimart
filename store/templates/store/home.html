@@ -795,6 +795,46 @@
                 animation: none;
             }
         }
+        
+/* MediMart College Project Disclaimer */
+.medimart-disclaimer {
+    width: 100%;
+    margin-top: 35px;
+    padding: 22px 20px;
+    background: #f5f9f8;
+    border-top: 1px solid #dce9e6;
+    box-sizing: border-box;
+}
+
+.disclaimer-content {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.disclaimer-content h4 {
+    color: #087f72;
+    font-size: 15px;
+    margin: 0 0 10px;
+    font-weight: 700;
+}
+
+.disclaimer-content p {
+    color: #64736f;
+    font-size: 12px;
+    line-height: 1.7;
+    margin: 7px 0;
+}
+
+@media (max-width: 600px) {
+    .medimart-disclaimer {
+        padding: 18px 15px;
+    }
+
+    .disclaimer-content p {
+        font-size: 11px;
+    }
+}
+
     </style>
 </head>
 
@@ -1040,6 +1080,33 @@
     </main>
 
     <!-- ===== Footer ===== -->
+     <!-- College Project Disclaimer -->
+<section class="medimart-disclaimer">
+    <div class="disclaimer-content">
+        <h4>📋 College Project Disclaimer</h4>
+
+        <p>
+            MediMart is an educational demonstration project developed
+            for academic purposes only. It is not a real online pharmacy
+            and does not sell or dispense actual medicines. All medicine
+            listings, vendor details, prices, orders, and payment processes
+            are simulated or provided for demonstration purposes.
+        </p>
+
+        <p>
+            The information displayed on this website should not be
+            considered medical advice. Please consult a qualified
+            healthcare professional before using any medicine.
+        </p>
+
+        <p>
+            No real payments or medicine deliveries are provided
+            through this website.
+        </p>
+    </div>
+</section>
+
+<!-- Keep your existing copyright footer below this -->
     <footer>
         <p>&copy; 2026 MediMart | College Project</p>
         <p>
@@ -1122,6 +1189,8 @@ window.addEventListener("load", function () {
 });
 
     </script>
+
+</body>
 
 </body>
 </html>

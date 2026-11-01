@@ -26,6 +26,8 @@ class VendorProfile(models.Model):
     store_name = models.CharField(max_length=150)
     phone = models.CharField(max_length=15, blank=True)
     address = models.TextField(blank=True)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
     is_approved = models.BooleanField(default=False)
 
     def __str__(self):
