@@ -40,6 +40,11 @@ urlpatterns = [
     path("vendor/register/", views.vendor_register, name="vendor_register"),
     path("vendor/dashboard/", views.vendor_dashboard, name="vendor_dashboard"),
     path(
+    "vendor/dashboard/order-requests/",
+    views.vendor_order_requests,
+    name="vendor_order_requests",
+),
+    path(
     "vendor/medicines/",
     views.vendor_medicines,
     name="vendor_medicines",

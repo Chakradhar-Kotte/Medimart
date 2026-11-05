@@ -1061,6 +1061,108 @@
     }
 }
 
+    /* ===== MOVE HOMEPAGE CONTENT TO THE RIGHT ===== */
+
+.hero-layout {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.hero-content {
+    width: 55%;
+    max-width: 850px;
+    margin-left: auto;
+    margin-right: 3.5%;
+    text-align: left;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content h1,
+.hero-content p {
+    text-align: left;
+}
+
+.hero-content .hero-label {
+    width: fit-content;
+}
+
+.hero-content .shop-button {
+    align-self: flex-start;
+}
+
+/* Keep feature cards on the right */
+.hero-content .hero-benefits {
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Mobile layout */
+@media (max-width: 700px) {
+    .hero-layout {
+        display: block;
+    }
+
+    .hero-content {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 35px 6%;
+        text-align: center;
+    }
+
+    .hero-content h1,
+    .hero-content p {
+        text-align: center;
+    }
+
+    .hero-content .shop-button {
+        align-self: center;
+    }
+
+    .hero-content .hero-benefits {
+        grid-template-columns: 1fr;
+    }
+}
+.features-section {
+    position: relative;
+    padding: 45px 5% 55px;
+    background: linear-gradient(
+        135deg,
+        #e4f7f8,
+        #f3f7ff,
+        #e8f8f1
+    );
+    border-radius: 28px;
+    margin: 35px auto;
+    width: 92%;
+}
+
+.features {
+    background: transparent;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.90);
+}
+    /* Explore Medicines - Royal Blue */
+.feature-card:nth-child(1) {
+    background: linear-gradient(135deg, #DCEBFF, #BBD5FF);
+    border: 1px solid #A9C9F5;
+}
+
+/* Shopping Cart - Apricot Gold */
+.feature-card:nth-child(2) {
+    background: linear-gradient(135deg, #FFE8C9, #FFD39A);
+    border: 1px solid #F2CB91;
+}
+
+/* Your Account - Sage Olive */
+.feature-card:nth-child(3) {
+    background: linear-gradient(135deg, #E7E8D0, #CDD4A8);
+    border: 1px solid #C3CA9C;
+}
     </style>
 </head>
 
@@ -1121,10 +1223,9 @@
                 {% elif user.vendorprofile %}
                     <a href="{% url 'vendor_medicines' %}">Manage Medicines</a>
 
-                    <a href="{% url 'vendor_dashboard' %}#order-requests">
-                        Order Requests
+                    <a href="{% url 'vendor_order_requests' %}">
+                     📦 Order Requests
                     </a>
-
                     <a href="{% url 'vendor_profile' %}">My Vendor Profile</a>
 
                     <span class="welcome-user">
@@ -1262,6 +1363,7 @@
     </section>
 
         <!-- ===== Quick links ===== -->
+    <div class="features-section">
         <h2 class="section-heading">Everything You Need</h2>
 
         <p class="section-description">
@@ -1315,6 +1417,7 @@
                     </a>
                 {% endif %}
             </div>
+        </div>   
         </section>
     </main>
 

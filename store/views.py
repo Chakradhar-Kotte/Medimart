@@ -802,7 +802,35 @@ def vendor_dashboard(request):
             "order_counts": order_counts,
         }
     )
+@login_required
+def vendor_order_requests(request):
+    vendor = VendorProfile.objects.filter(user=request.user).first()
 
+    if vendor is None:
+        messages.error(request, "You do not have a vendor account.")
+        return redirect("vendor_login")
+
+    if not vendor.is_approved:
+        messages.error(
+            request,
+            "Your vendor account is waiting for admin approval."
+        )
+        return redirect("vendor_login")
+
+    order_items = (
+        OrderItem.objects.filter(vendor=vendor)
+        .select_related("order", "order__customer", "medicine")
+        .order_by("-order__created_at")
+    )
+
+    return render(
+        request,
+        "store/vendor_order_requests.html",
+        {
+            "vendor": vendor,
+            "order_items": order_items,
+        }
+    )
 @login_required
 @require_POST
 def vendor_update_order_item(request, item_id):

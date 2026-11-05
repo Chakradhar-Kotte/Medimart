@@ -4,204 +4,453 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Vendor Login | MediMart</title>
+
     <style>
-       
-.password-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    margin: 8px 0 16px;
-}
+        * {
+            box-sizing: border-box;
+        }
 
-.password-wrapper input {
-    width: 100%;
-    min-width: 0;
-    padding-right: 68px;
-    margin: 0;
-}
-
-.password-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    margin: 8px 0 16px;
-}
-
-.password-wrapper input {
-    width: 100%;
-    min-width: 0;
-    padding-right: 80px;
-    margin: 0;
-    box-sizing: border-box;
-}
-
-.toggle-password {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: block;
-    width: auto;
-    padding: 6px 10px;
-    border: 1px solid #087f8c;
-    border-radius: 6px;
-    background: #eaf7f7;
-    color: #087f8c;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 10;
-}
-
-
-.message {
-    padding: 12px;
-    border-radius: 6px;
-    background: #fff4d6;
-    color: #8a5a00;
-    border: 1px solid #f0d98c;
-}
-
-.message.error {
-    background: #fde8e7;
-    color: #b42318;
-    border-color: #f5b8b4;
-}
         body {
             font-family: Arial, sans-serif;
-            background: #eef3ff;
             margin: 0;
-            padding: 0;
+            min-height: 100vh;
+            padding: 35px 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background:
+                radial-gradient(circle at 10% 15%,
+                    rgba(85, 145, 220, 0.15), transparent 35%),
+                radial-gradient(circle at 90% 85%,
+                    rgba(8, 127, 140, 0.13), transparent 35%),
+                linear-gradient(135deg, #edf3ff, #e6f5f6);
         }
+
+        /* Main login card */
         .login-box {
-            width: 340px;
-            max-width: calc(100% - 56px);
-            margin: 80px auto;
-            padding: 25px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px #0002;
-        }
-        h2 { text-align: center; color: #3158a5; }
-        input {
-            box-sizing: border-box;
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
+            max-width: 490px;
+            padding: 38px 40px;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 22px;
+
+            box-shadow:
+                0 12px 40px rgba(35, 65, 120, 0.12),
+                0 2px 8px rgba(0, 0, 0, 0.04);
+
+            border: 1px solid rgba(255, 255, 255, 0.9);
         }
-        button {
+
+        /* Heading */
+        .login-icon {
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #e5efff, #dff5f4);
+            color: #3158a5;
+            font-size: 34px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #3158a5;
+            font-size: 29px;
+            margin: 0 0 9px;
+            font-weight: 750;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #78869b;
+            font-size: 14px;
+            margin: 0 0 30px;
+        }
+
+        /* Input fields */
+        .form-group {
+            margin-bottom: 19px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #34445b;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            display: block;
             width: 100%;
-            padding: 12px;
-            background: #3158a5;
-            color: white;
-            border: 0;
-            border-radius: 5px;
+            height: 53px;
+            padding: 0 15px;
+            border: 1.5px solid #dce3ed;
+            border-radius: 10px;
+            background: #fbfcff;
+            font-size: 15px;
+            color: #26374d;
+            outline: none;
+            transition: 0.25s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #087f8c;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(8, 127, 140, 0.09);
+        }
+
+        .form-group input::placeholder {
+            color: #9aa6b5;
+        }
+
+        /* Password field */
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-wrapper input {
+            padding-right: 85px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 9px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: auto;
+            padding: 7px 12px;
+            border: 1px solid #087f8c;
+            border-radius: 7px;
+            background: #eaf7f7;
+            color: #087f8c;
+            font-size: 13px;
+            font-weight: bold;
             cursor: pointer;
         }
-        a { color: #3158a5; }
-        .message { color: #b42318; }
-    </style>
-</head>
-<body>
-    {% include "store/partials/messages.html" %}
-    <div class="login-box">
-        {% if messages %}
-    {% for message in messages %}
-        <div class="alert {{ message.tags }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endif %}
-        <h2>Vendor Login</h2>
-<form method="post" action="{% url 'vendor_login' %}">
-        {% csrf_token %}
 
-       
-<input
-    type="text"
-    name="username"
-    placeholder="Vendor Username"
-    autocomplete="username"
-    required
->
-
-<input
-    type="email"
-    name="email"
-    placeholder="Email Address"
-    autocomplete="email"
-    required
->
-            
-    <div class="password-wrapper">
-    <input
-        type="password"
-        id="vendor-password"
-        name="password"
-        placeholder="Enter your password"
-        autocomplete="current-password"
-        required
-    >
-    <button
-        type="button"
-        class="toggle-password"
-        onclick="togglePassword('vendor-password', this)"
-        aria-label="Show password"
-        aria-pressed="false"
-        aria-controls="vendor-password"
-    >
-        Show
-    </button>
-    </div>
-     <p>
-    <a href="{% url 'password_reset' %}">Forgot Password?</a>
-</p>
-
-            <button type="submit">Login as Vendor</button>
-        </form>
-
-        
-        <p>
-<div style="text-align: center; margin-top: 20px;">
-    <a href="{% url 'home' %}"
-       style="display: inline-block;
-              padding: 12px 20px;
-              background-color: #087f8c;
-              color: white;
-              border-radius: 10px;
-              font-weight: bold;
-              text-decoration: none;">
-        ← Back to Home
-    </a>
-</div>
-</p>
-    </div>
-
-
-<script>
-    function togglePassword(inputId, button) {
-        const passwordInput = document.getElementById(inputId);
-
-        if (!passwordInput) {
-            return;
+        .toggle-password:hover {
+            background: #d7f0ef;
         }
 
-        const isHidden = passwordInput.type === "password";
+        /* Forgot password */
+        .forgot-password {
+            text-align: right;
+            margin: -3px 0 23px;
+        }
 
-        passwordInput.type = isHidden ? "text" : "password";
-        button.textContent = isHidden ? "Hide" : "Show";
+        .forgot-password a {
+            color: #3158a5;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
 
-        button.setAttribute(
-            "aria-label",
-            isHidden ? "Hide password" : "Show password"
+        .forgot-password a:hover {
+            color: #087f8c;
+            text-decoration: underline;
+        }
+
+        /* Login button */
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #3158a5, #416fc1);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.25s ease;
+            box-shadow: 0 5px 13px rgba(49, 88, 165, 0.18);
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(135deg, #264b95, #3158a5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 17px rgba(49, 88, 165, 0.25);
+        }
+
+        /* Back to home */
+        .back-home {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .back-home a {
+            display: inline-block;
+            padding: 13px 23px;
+            background: linear-gradient(135deg, #087f8c, #0799a5);
+            color: white;
+            border-radius: 11px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.25s ease;
+        }
+
+        .back-home a:hover {
+            background: #066d78;
+            transform: translateY(-2px);
+        }
+
+        /* Messages */
+        .message,
+        .alert {
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border-radius: 9px;
+            background: #fff4d6;
+            color: #8a5a00;
+            border: 1px solid #f0d98c;
+            font-size: 14px;
+        }
+
+        .message.error,
+        .alert.error {
+            background: #fde8e7;
+            color: #b42318;
+            border-color: #f5b8b4;
+        }
+
+        .alert.success {
+            background: #e5f8ed;
+            color: #167344;
+            border-color: #b8e5c9;
+        }
+
+        /* Security footer */
+        .security-note {
+            text-align: center;
+            color: #8190a2;
+            font-size: 12px;
+            margin: 24px 0 0;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 520px) {
+            body {
+                padding: 20px 14px;
+            }
+
+            .login-box {
+                padding: 30px 22px;
+                border-radius: 18px;
+            }
+
+            h2 {
+                font-size: 25px;
+            }
+        }
+        .login-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.login-brand span {
+    font-size: 17px;
+    font-weight: 800;
+    color: #087f8c;
+    letter-spacing: 1px;
+}
+
+.login-icon {
+    width: 68px;
+    height: 68px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #e5efff, #dff5f4);
+    font-size: 34px;
+}
+
+/* Smooth login card animation */
+
+.login-box {
+    transition: transform 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+.login-box:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 18px 45px rgba(35, 65, 120, 0.16),
+        0 5px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Login loading state */
+
+.login-btn:disabled {
+    opacity: 0.8;
+    cursor: wait;
+    transform: none;
+}
+
+.login-btn.loading {
+    background: linear-gradient(135deg, #087f8c, #0799a5);
+}
+    </style>
+</head>
+
+<body>
+
+    <div class="login-box">
+
+        {% include "store/partials/messages.html" %}
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="login-brand">
+    <div class="login-icon">💊</div>
+    <span>MediMart</span>
+</div>
+
+        <h2>Vendor Login</h2>
+
+        <p class="subtitle">
+            Welcome back! Access your MediMart vendor account.
+        </p>
+
+       <form method="post"
+      action="{% url 'vendor_login' %}"
+      id="vendor-login-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="vendor-username">Vendor Username</label>
+                <input
+                    type="text"
+                    id="vendor-username"
+                    name="username"
+                    placeholder="Enter your username"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="vendor-email">Email Address</label>
+                <input
+                    type="email"
+                    id="vendor-email"
+                    name="email"
+                    placeholder="Enter your email address"
+                    autocomplete="email"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="vendor-password">Password</label>
+
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        id="vendor-password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        onclick="togglePassword('vendor-password', this)"
+                        aria-label="Show password"
+                        aria-pressed="false"
+                        aria-controls="vendor-password"
+                    >
+                        Show
+                    </button>
+                </div>
+            </div>
+
+            <p class="forgot-password">
+                <a href="{% url 'password_reset' %}">
+                    Forgot Password?
+                </a>
+            </p>
+
+            <button type="submit"
+        class="login-btn"
+        id="vendor-login-button">
+
+    <span id="login-button-text">Login as Vendor →</span>
+
+</button>
+        </form>
+
+        <div class="back-home">
+            <a href="{% url 'home' %}">
+                ← Back to Home
+            </a>
+        </div>
+
+        <p class="security-note">
+            🛡 Secure Vendor Login | MediMart
+        </p>
+
+    </div>
+
+    <script>
+        function togglePassword(inputId, button) {
+            const passwordInput = document.getElementById(inputId);
+
+            if (!passwordInput) {
+                return;
+            }
+
+            const isHidden = passwordInput.type === "password";
+
+            passwordInput.type = isHidden ? "text" : "password";
+            button.textContent = isHidden ? "Hide" : "Show";
+
+            button.setAttribute(
+                "aria-label",
+                isHidden ? "Hide password" : "Show password"
+            );
+
+            button.setAttribute("aria-pressed", String(isHidden));
+        }
+        // Vendor login loading effect
+
+document.getElementById("vendor-login-form")
+    .addEventListener("submit", function () {
+
+        const button = document.getElementById(
+            "vendor-login-button"
         );
 
-        button.setAttribute("aria-pressed", String(isHidden));
-    }
-</script>
+        const buttonText = document.getElementById(
+            "login-button-text"
+        );
+
+        button.disabled = true;
+        button.classList.add("loading");
+
+        buttonText.textContent = "Signing in...";
+    });
+    </script>
 
 </body>
 </html>

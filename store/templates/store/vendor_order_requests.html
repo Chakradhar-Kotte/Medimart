@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Order Requests | MediMart</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f7f6;
+            margin: 0;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #087f70, #16a085);
+            color: white;
+            padding: 30px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin-top: 0;
+            color: white;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 16px;
+            background: white;
+            color: #087f70;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .order-panel {
+            background: linear-gradient(145deg, #ffffff, #f4fbf9);
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0,80,70,0.08);
+        }
+
+        .order-panel h2 {
+            color: #087f70;
+        }
+
+        .order-table-wrap {
+            overflow-x: auto;
+        }
+
+        .order-table {
+            width: 100%;
+            min-width: 1050px;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .order-table th {
+            background: #e8f5f2;
+            color: #28534c;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .order-table td {
+            padding: 14px;
+            border-bottom: 1px solid #edf1f2;
+        }
+
+        .order-table tr:hover {
+            background: #f0faf7;
+        }
+
+        .order-number, .order-subtotal {
+            color: #087f70;
+            font-weight: bold;
+        }
+
+        .customer-details {
+            min-width: 190px;
+            line-height: 1.8;
+            font-size: 13px;
+        }
+
+        .medicine-info-order {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .order-medicine-image {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+            background: #f0f8f6;
+            border-radius: 10px;
+        }
+
+        .order-medicine-name {
+            font-weight: bold;
+        }
+
+        .order-quantity {
+            background: #e9f1ff;
+            color: #2864c8;
+            padding: 7px 12px;
+            border-radius: 20px;
+        }
+
+        .order-status {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .status-pending { background: #fff0c7; color: #956000; }
+        .status-accepted { background: #d9f7e8; color: #087f50; }
+        .status-rejected { background: #ffe0e0; color: #bd2929; }
+        .status-processing { background: #dceaff; color: #1756b1; }
+        .status-completed { background: #d7f5e4; color: #087044; }
+
+        .order-actions {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+            min-width: 150px;
+        }
+
+        .order-actions form {
+            display: inline;
+        }
+
+        .order-action-btn {
+            border: none;
+            padding: 9px 12px;
+            border-radius: 7px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .accept-btn { background: #087f70; }
+        .reject-btn { background: #dc4545; }
+        .process-btn { background: #2864c8; }
+        .complete-btn { background: #168044; }
+
+        .no-orders {
+            text-align: center;
+            padding: 45px;
+            color: #64748b;
+            background: #f0faf7;
+            border-radius: 12px;
+        }
+
+        .no-orders h3 {
+            color: #087f70;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <a href="{% url 'vendor_dashboard' %}" class="back-button">
+            ← Back to Vendor Dashboard
+        </a>
+
+        <h1>Customer Order Requests</h1>
+        <p>Manage orders received by {{ vendor.store_name }}.</p>
+    </div>
+
+    <div class="order-panel">
+
+        <h2>📦 Customer Orders</h2>
+
+        {% if order_items %}
+
+        <div class="order-table-wrap">
+
+            <table class="order-table">
+
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Date</th>
+                        <th>Customer Details</th>
+                        <th>Medicine</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                {% for item in order_items %}
+
+                <tr>
+                    <td class="order-number">#{{ item.order.id }}</td>
+
+                    <td>{{ item.order.created_at|date:"d M Y, H:i" }}</td>
+
+                    <td class="customer-details">
+                        <strong>{{ item.order.full_name }}</strong><br>
+                        Phone: {{ item.order.phone }}<br>
+                        Address: {{ item.order.delivery_address }}
+                    </td>
+
+                    <td>
+                        <div class="medicine-info-order">
+
+                            {% if item.medicine.image %}
+                                <img
+                                    src="{{ item.medicine.image.url }}"
+                                    class="order-medicine-image"
+                                    alt="{{ item.medicine.name }}"
+                                >
+                            {% else %}
+                                <span>💊</span>
+                            {% endif %}
+
+                            <span class="order-medicine-name">
+                                {{ item.medicine.name }}
+                            </span>
+
+                        </div>
+                    </td>
+
+                    <td>
+                        <span class="order-quantity">
+                            {{ item.quantity }}
+                        </span>
+                    </td>
+
+                    <td class="order-subtotal">
+                        ₹{{ item.subtotal }}
+                    </td>
+
+                    <td>
+                        <span class="order-status status-{{ item.status }}">
+                            {{ item.get_status_display }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="order-actions">
+
+                            {% if item.status == "pending" %}
+
+                            <form method="post"
+                                  action="{% url 'vendor_update_order_item' item.id %}">
+                                {% csrf_token %}
+                                <button class="order-action-btn accept-btn"
+                                        name="action" value="accept" type="submit">
+                                    Accept
+                                </button>
+                            </form>
+
+                            <form method="post"
+                                  action="{% url 'vendor_update_order_item' item.id %}">
+                                {% csrf_token %}
+                                <button class="order-action-btn reject-btn"
+                                        name="action" value="reject" type="submit">
+                                    Reject
+                                </button>
+                            </form>
+
+                            {% elif item.status == "accepted" %}
+
+                            <form method="post"
+                                  action="{% url 'vendor_update_order_item' item.id %}">
+                                {% csrf_token %}
+                                <button class="order-action-btn process-btn"
+                                        name="action" value="processing" type="submit">
+                                    Start Processing
+                                </button>
+                            </form>
+
+                            {% elif item.status == "processing" %}
+
+                            <form method="post"
+                                  action="{% url 'vendor_update_order_item' item.id %}">
+                                {% csrf_token %}
+                                <button class="order-action-btn complete-btn"
+                                        name="action" value="complete" type="submit">
+                                    Mark Completed
+                                </button>
+                            </form>
+
+                            {% else %}
+                                <span>No actions</span>
+                            {% endif %}
+
+                        </div>
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="no-orders">
+            <h3>No Customer Orders Yet</h3>
+            <p>New customer order requests will appear here.</p>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>
