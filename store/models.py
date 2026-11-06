@@ -39,6 +39,13 @@ class Medicine(models.Model):
         on_delete=models.PROTECT,
         related_name="medicines"
     )
+    added_by = models.ForeignKey(
+    VendorProfile,
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True,
+    related_name="added_medicines"
+    )
     name = models.CharField(max_length=150)
     image = models.ImageField(
         upload_to="medicines/",

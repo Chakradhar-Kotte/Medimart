@@ -802,6 +802,7 @@ def vendor_dashboard(request):
             "order_counts": order_counts,
         }
     )
+
 @login_required
 def vendor_order_requests(request):
     vendor = VendorProfile.objects.filter(user=request.user).first()
@@ -817,11 +818,37 @@ def vendor_order_requests(request):
         )
         return redirect("vendor_login")
 
-    order_items = (
-        OrderItem.objects.filter(vendor=vendor)
-        .select_related("order", "order__customer", "medicine")
-        .order_by("-order__created_at")
+    selected_status = request.GET.get("status", "all")
+
+    valid_statuses = [
+        "pending",
+        "accepted",
+        "rejected",
+        "processing",
+        "completed",
+    ]
+
+    order_items = OrderItem.objects.filter(
+        vendor=vendor
+    ).select_related(
+        "order", "order__customer", "medicine"
     )
+
+    if selected_status in valid_statuses:
+        order_items = order_items.filter(status=selected_status)
+    else:
+        selected_status = "all"
+
+    order_items = order_items.order_by("-order__created_at")
+
+    status_counts = {
+        "all": OrderItem.objects.filter(vendor=vendor).count(),
+        "pending": OrderItem.objects.filter(vendor=vendor, status="pending").count(),
+        "accepted": OrderItem.objects.filter(vendor=vendor, status="accepted").count(),
+        "rejected": OrderItem.objects.filter(vendor=vendor, status="rejected").count(),
+        "processing": OrderItem.objects.filter(vendor=vendor, status="processing").count(),
+        "completed": OrderItem.objects.filter(vendor=vendor, status="completed").count(),
+    }
 
     return render(
         request,
@@ -829,8 +856,13 @@ def vendor_order_requests(request):
         {
             "vendor": vendor,
             "order_items": order_items,
+            "selected_status": selected_status,
+            "status_counts": status_counts,
         }
     )
+
+
+
 @login_required
 @require_POST
 def vendor_update_order_item(request, item_id):
@@ -840,7 +872,10 @@ def vendor_update_order_item(request, item_id):
     ).first()
 
     if vendor is None:
-        messages.error(request, "Approved vendor account required.")
+        messages.error(
+            request,
+            "Approved vendor account required."
+        )
         return redirect("vendor_login")
 
     item = get_object_or_404(
@@ -872,7 +907,7 @@ def vendor_update_order_item(request, item_id):
     else:
         try:
             with transaction.atomic():
-                # Lock the order item to prevent duplicate updates.
+
                 item = OrderItem.objects.select_for_update().get(
                     pk=item_id,
                     vendor=vendor,
@@ -884,9 +919,9 @@ def vendor_update_order_item(request, item_id):
                         "This order item has already changed status. "
                         "Please refresh."
                     )
-                    return redirect("vendor_dashboard")
+                    return redirect("vendor_order_requests")
 
-                # Restore stock if the vendor rejects this item.
+                # Restore stock when the vendor rejects an item.
                 if action == "reject":
                     listing = VendorListing.objects.select_for_update().filter(
                         vendor=vendor,
@@ -901,7 +936,7 @@ def vendor_update_order_item(request, item_id):
                     )
                     listing.save(update_fields=["stock_quantity"])
 
-                # Update the individual order item.
+                # Update the order item's status.
                 item.status = transition[1]
                 item.save(update_fields=["status"])
 
@@ -953,47 +988,39 @@ def vendor_update_order_item(request, item_id):
                 "The order update was not saved."
             )
 
-    return redirect("vendor_dashboard")
+    return redirect("vendor_order_requests")
 
 
 @login_required
 def vendor_listing_add(request):
     vendor = VendorProfile.objects.filter(
-        user=request.user
+        user=request.user,
+        is_approved=True
     ).first()
 
     if vendor is None:
         messages.error(
             request,
-            "You do not have a vendor account."
-        )
-        return redirect("vendor_login")
-
-    if not vendor.is_approved:
-        messages.error(
-            request,
-            "Your vendor account is waiting for admin approval."
+            "An approved vendor account is required to add medicines."
         )
         return redirect("vendor_login")
 
     if request.method == "POST":
         form = VendorMedicineForm(
-    request.POST,
-    request.FILES
-)
-
-        price = request.POST.get("price", "")
-        stock_quantity = request.POST.get("stock_quantity", "")
+            request.POST,
+            request.FILES
+        )
 
         if form.is_valid():
             try:
-                price_value = Decimal(price)
-                stock_value = int(stock_quantity)
+                price_value = Decimal(
+                    request.POST.get("price", "")
+                )
+                stock_value = int(
+                    request.POST.get("stock_quantity", "")
+                )
 
-                if price_value <= 0:
-                    raise ValueError
-
-                if stock_value < 0:
+                if price_value <= 0 or stock_value < 0:
                     raise ValueError
 
             except (ValueError, InvalidOperation):
@@ -1029,31 +1056,38 @@ def vendor_listing_add(request):
                     }
                 )
 
-            category, created = Category.objects.get_or_create(
-                name__iexact=category_name,
-                defaults={"name": category_name},
-            )
+            with transaction.atomic():
 
-            medicine = form.save(commit=False)
-            medicine.category = category
+                category, created = Category.objects.get_or_create(
+                    name__iexact=category_name,
+                    defaults={"name": category_name},
+                )
 
-            # Newly submitted medicines require admin review.
-            medicine.is_active = False
-            medicine.save()
+                medicine = form.save(commit=False)
+                medicine.category = category
 
-            VendorListing.objects.create(
-                vendor=vendor,
-                medicine=medicine,
-                price=price_value,
-                stock_quantity=stock_value,
-                is_available=True,
-            )
+                # Record the vendor who added this medicine.
+                medicine.added_by = vendor
+
+                # Approved vendors' medicines are active immediately.
+                medicine.is_active = True
+                medicine.save()
+
+                # Create this vendor's own price and stock listing.
+                VendorListing.objects.create(
+                    vendor=vendor,
+                    medicine=medicine,
+                    price=price_value,
+                    stock_quantity=stock_value,
+                    is_available=True,
+                )
 
             messages.success(
                 request,
-                "Medicine submitted successfully. "
-                "An admin must approve it before customers can buy it."
+                f"{medicine.name} added successfully! "
+                "It is now available in the MediMart catalogue."
             )
+
             return redirect("vendor_dashboard")
 
     else:
@@ -1067,8 +1101,6 @@ def vendor_listing_add(request):
             "is_new_medicine": True,
         }
     )
-
-
 
 @login_required
 def vendor_listing_edit(request, listing_id):

@@ -1221,7 +1221,9 @@
                     </span>
 
                 {% elif user.vendorprofile %}
-                    <a href="{% url 'vendor_medicines' %}">Manage Medicines</a>
+                    <a href="{% url 'vendor_dashboard' %}">
+                        Manage Medicines
+                    </a>
 
                     <a href="{% url 'vendor_order_requests' %}">
                      📦 Order Requests

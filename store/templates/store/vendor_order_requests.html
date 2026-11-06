@@ -168,6 +168,65 @@
         .no-orders h3 {
             color: #087f70;
         }
+
+        
+.order-filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 22px 0;
+}
+
+.filter-btn {
+    display: inline-block;
+    padding: 11px 17px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1px solid transparent;
+    transition: 0.2s;
+}
+
+.filter-btn:hover {
+    transform: translateY(-2px);
+}
+
+.filter-btn.all {
+    background: #e9f1ff;
+    color: #2864c8;
+}
+
+.filter-btn.pending {
+    background: #fff0c7;
+    color: #956000;
+}
+
+.filter-btn.accepted {
+    background: #d9f7e8;
+    color: #087f50;
+}
+
+.filter-btn.rejected {
+    background: #ffe0e0;
+    color: #bd2929;
+}
+
+.filter-btn.processing {
+    background: #dceaff;
+    color: #1756b1;
+}
+
+.filter-btn.completed {
+    background: #d7f5e4;
+    color: #087044;
+}
+
+.filter-btn.active {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
     </style>
 </head>
 
@@ -187,6 +246,41 @@
     <div class="order-panel">
 
         <h2>📦 Customer Orders</h2>
+        
+<div class="order-filter-options">
+
+    <a href="{% url 'vendor_order_requests' %}"
+       class="filter-btn all {% if selected_status == 'all' %}active{% endif %}">
+        All Orders ({{ status_counts.all }})
+    </a>
+
+    <a href="?status=pending"
+       class="filter-btn pending {% if selected_status == 'pending' %}active{% endif %}">
+        Pending ({{ status_counts.pending }})
+    </a>
+
+    <a href="?status=accepted"
+       class="filter-btn accepted {% if selected_status == 'accepted' %}active{% endif %}">
+        Accepted ({{ status_counts.accepted }})
+    </a>
+
+    <a href="?status=rejected"
+       class="filter-btn rejected {% if selected_status == 'rejected' %}active{% endif %}">
+        Rejected ({{ status_counts.rejected }})
+    </a>
+
+    <a href="?status=processing"
+       class="filter-btn processing {% if selected_status == 'processing' %}active{% endif %}">
+        Processing ({{ status_counts.processing }})
+    </a>
+
+    <a href="?status=completed"
+       class="filter-btn completed {% if selected_status == 'completed' %}active{% endif %}">
+        Completed ({{ status_counts.completed }})
+    </a>
+
+</div>
+
 
         {% if order_items %}
 
